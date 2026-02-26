@@ -24,7 +24,6 @@ export default function Header({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -37,11 +36,17 @@ export default function Header({
 
   return (
     <>
-      {/* Sticky header bar */}
       <header className="header">
-        <div className="header__title">
-          <div className="header__line1">{titleLine1}</div>
-          <div className="header__line2">{titleLine2}</div>
+        <div className="header__left">
+          <img
+            src="/images/logo-cropped.png"
+            alt="Bizniz Optimizer logo"
+            className="header__logo"
+          />
+          <div className="header__title">
+            <div className="header__line1">{titleLine1}</div>
+            <div className="header__line2">{titleLine2}</div>
+          </div>
         </div>
 
         <button
@@ -56,12 +61,10 @@ export default function Header({
         </button>
       </header>
 
-      {/* Overlay — rendered at document root level via fixed positioning */}
       {open && (
         <div className="menuOverlay" onClick={() => setOpen(false)} />
       )}
 
-      {/* Drawer — completely outside header so sticky never traps it */}
       <nav className={`menu ${open ? "menu--open" : ""}`} aria-hidden={!open}>
         <div className="menu__nav">
           {links.map((l) => (
