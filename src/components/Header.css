@@ -1,0 +1,97 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 12px 10px;
+  z-index: 50;
+}
+
+.header__title {
+  max-width: 78%;
+}
+
+.header__line1,
+.header__line2 {
+  font-weight: 900;
+  font-size: 22px;
+  line-height: 1.05;
+  letter-spacing: -0.2px;
+}
+
+/* Burger similar to screenshot */
+.burger {
+  width: 54px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+  padding: 6px 4px;
+  cursor: pointer;
+}
+
+.burger span {
+  display: block;
+  height: 5px;
+  width: 44px;
+  background: #0b4a63;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05) inset;
+}
+
+/* Slide-out menu like your first screenshot */
+.menuOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.20);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+  z-index: 60;
+}
+.menuOverlay--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(86vw, 360px);
+  height: 100vh;
+  transform: translateX(102%);
+  transition: transform 220ms ease;
+  z-index: 70;
+
+  padding: 92px 14px 18px;
+  background: rgba(235, 245, 252, 0.78);
+  backdrop-filter: blur(10px);
+  border-left: 3px solid var(--line);
+}
+
+.menu--open {
+  transform: translateX(0);
+}
+
+.menu__nav {
+  display: grid;
+  gap: 18px;
+}
+
+.menu__item {
+  text-align: left;
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  padding: 0 0 12px;
+  cursor: pointer;
+
+  border-bottom: 3px solid var(--line);
+}

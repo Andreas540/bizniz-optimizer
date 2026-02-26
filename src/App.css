@@ -1,0 +1,68 @@
+:root {
+  --ink: #0a0a0a;
+  --line: #0b4a63;     /* dark teal-ish line like your screenshot */
+  --panel: rgba(148, 196, 230, 0.55); /* light-blue glassy panel */
+  --panel-strong: rgba(148, 196, 230, 0.72);
+  --radius: 22px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--ink);
+}
+
+.page {
+  min-height: 100vh;
+
+  /* Metallic light-blue base + “shiny” corners */
+  background:
+    radial-gradient(700px 420px at 10% 8%, rgba(230, 235, 240, 0.95), rgba(230, 235, 240, 0) 60%),
+    radial-gradient(820px 520px at 92% 92%, rgba(230, 235, 240, 0.85), rgba(230, 235, 240, 0) 62%),
+    linear-gradient(145deg, rgba(170, 215, 242, 0.92), rgba(120, 180, 220, 0.88)),
+    repeating-linear-gradient(
+      115deg,
+      rgba(255,255,255,0.06) 0px,
+      rgba(255,255,255,0.06) 6px,
+      rgba(0,0,0,0.03) 6px,
+      rgba(0,0,0,0.03) 14px
+    );
+}
+
+.main {
+  padding: 14px 12px 28px;
+  /* leaves room for sticky header */
+  padding-top: 88px;
+}
+
+.section {
+  padding: 18px 0 26px;
+}
+
+.section--hero {
+  padding-top: 10px;
+}
+
+.h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.p {
+  margin: 0;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+/* Slightly wider on larger screens, still mobile-optimized */
+@media (min-width: 720px) {
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
