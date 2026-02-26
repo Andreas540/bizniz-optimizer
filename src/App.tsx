@@ -1,6 +1,7 @@
 import { useMemo, useRef } from "react";
 import Header from "./components/Header";
 import VideoHero from "./components/VideoHero";
+import ContactSection from "./components/ContactSection";
 import "./App.css";
 
 type SectionId = "intro" | "contact" | "pricing" | "making";
@@ -62,8 +63,7 @@ export default function App() {
         </section>
 
         <section ref={setSectionRef("contact")} id="contact" className="section">
-          <h2 className="h2">Contact us!</h2>
-          <p className="p">Add your contact form / email / CTA here.</p>
+          <ContactSection />
         </section>
 
         <section ref={setSectionRef("pricing")} id="pricing" className="section">

@@ -10,5 +10,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Netlify Forms detection — paste this anywhere inside <body> in index.html -->
+<form name="contact" netlify netlify-honeypot="bot-field" hidden>
+  <input type="text" name="name" />
+  <input type="email" name="email" />
+  <input type="text" name="phone" />
+  <textarea name="message"></textarea>
+</form>
   </body>
 </html>
