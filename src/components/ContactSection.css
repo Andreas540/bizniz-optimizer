@@ -16,7 +16,6 @@
   flex-direction: column;
   gap: 6px;
   margin-bottom: 18px;
-  /* Ensure field never exceeds parent width */
   max-width: 100%;
 }
 
@@ -33,7 +32,8 @@
 
 .contact__input {
   font-family: var(--font);
-  font-size: 15px;
+  /* 16px prevents iOS Safari from zooming in on tap */
+  font-size: 16px;
   padding: 10px 12px;
   border: 2px solid rgba(11, 74, 99, 0.3);
   border-radius: 6px;
@@ -41,7 +41,6 @@
   color: var(--ink);
   outline: none;
   transition: border-color 160ms ease;
-  /* box-sizing:border-box already set globally, but be explicit */
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -73,7 +72,8 @@
 
 .contact__select {
   font-family: var(--font);
-  font-size: 14px;
+  /* 16px prevents iOS Safari from zooming in on tap */
+  font-size: 16px;
   padding: 10px 8px;
   border: 2px solid rgba(11, 74, 99, 0.3);
   border-radius: 6px;
@@ -96,12 +96,13 @@
 .contact__input--phone {
   flex: 1;
   min-width: 0;
-  width: 0; /* flex will grow it, but it won't push past parent */
+  width: 0;
 }
 
 .contact__textarea {
   font-family: var(--font);
-  font-size: 15px;
+  /* 16px prevents iOS Safari from zooming in on tap */
+  font-size: 16px;
   padding: 10px 12px;
   border: 2px solid rgba(11, 74, 99, 0.3);
   border-radius: 6px;
