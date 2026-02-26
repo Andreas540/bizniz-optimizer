@@ -1,5 +1,5 @@
 .contact {
-  padding: 4px 0 36px;
+  padding: 28px 0 36px;
 }
 
 .contact__heading {
@@ -16,6 +16,8 @@
   flex-direction: column;
   gap: 6px;
   margin-bottom: 18px;
+  /* Ensure field never exceeds parent width */
+  max-width: 100%;
 }
 
 .contact__label {
@@ -39,9 +41,10 @@
   color: var(--ink);
   outline: none;
   transition: border-color 160ms ease;
+  /* box-sizing:border-box already set globally, but be explicit */
   width: 100%;
-  /* Prevent inputs from breaking out of their container */
-  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .contact__input:focus {
@@ -64,8 +67,8 @@
   display: flex;
   gap: 8px;
   align-items: stretch;
-  /* Prevent the row overflowing the page width */
   max-width: 100%;
+  min-width: 0;
 }
 
 .contact__select {
@@ -79,11 +82,10 @@
   outline: none;
   cursor: pointer;
   transition: border-color 160ms ease;
-  width: 160px;
-  flex-shrink: 0;
-  box-sizing: border-box;
-  /* Prevent select from overflowing */
+  width: 175px;
   max-width: 55%;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .contact__select:focus {
@@ -93,8 +95,8 @@
 
 .contact__input--phone {
   flex: 1;
-  /* Critical: min-width 0 lets the flex child shrink below its content size */
   min-width: 0;
+  width: 0; /* flex will grow it, but it won't push past parent */
 }
 
 .contact__textarea {
@@ -109,8 +111,9 @@
   resize: vertical;
   transition: border-color 160ms ease;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 110px;
-  box-sizing: border-box;
 }
 
 .contact__textarea:focus {
@@ -174,7 +177,6 @@
 .contact__modal-line2 {
   font-family: var(--font);
   font-size: 15px;
-  font-weight: 400;
   color: var(--ink);
   margin: 0 0 8px;
   line-height: 1.4;

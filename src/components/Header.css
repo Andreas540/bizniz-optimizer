@@ -12,12 +12,11 @@
   border-bottom: 3px solid var(--line);
 }
 
-/* Logo + title grouped on the left */
 .header__left {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-width: 0; /* allows text to truncate if needed */
+  min-width: 0;
 }
 
 .header__logo {
