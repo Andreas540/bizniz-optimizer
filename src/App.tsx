@@ -6,6 +6,8 @@ import "./App.css";
 
 type SectionId = "intro" | "contact" | "pricing" | "making";
 
+const HEADER_H = 100; // must match --header-h in App.css
+
 export default function App() {
   const links = useMemo(
     () => [
@@ -34,7 +36,10 @@ export default function App() {
     const key = id as SectionId;
     const el = sectionRefs.current[key];
     if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Manual scroll so the section lands exactly below the sticky header
+    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_H;
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   return (
