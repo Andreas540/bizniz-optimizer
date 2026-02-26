@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 12px 10px;
+  padding: 14px 16px 10px;
   background: rgba(235, 245, 252, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 3px solid var(--line);
@@ -16,11 +16,22 @@
   max-width: 78%;
 }
 
-.header__line1,
+.header__line1 {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.25;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
 .header__line2 {
-  font-weight: 900;
-  font-size: 22px;
-  line-height: 1.05;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.25;
+  color: var(--line);
+  letter-spacing: -0.01em;
 }
 
 .burger {
@@ -38,12 +49,12 @@
 
 .burger span {
   display: block;
-  height: 5px;
-  width: 44px;
+  height: 4px;
+  width: 40px;
   background: #0b4a63;
+  border-radius: 2px;
 }
 
-/* Dim overlay behind drawer */
 .menuOverlay {
   position: fixed;
   inset: 0;
@@ -51,11 +62,6 @@
   z-index: 60;
 }
 
-/*
-  Drawer: position fixed to viewport.
-  HIDDEN by default with both transform (off-screen) AND visibility:hidden.
-  This means it takes up zero visual space and cannot be interacted with when closed.
-*/
 .menu {
   position: fixed;
   top: 0;
@@ -90,9 +96,12 @@
   text-align: left;
   background: transparent;
   border: 0;
-  font-size: 20px;
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 500;
   padding: 0 0 12px;
   cursor: pointer;
-  border-bottom: 3px solid var(--line);
+  border-bottom: 2px solid var(--line);
   width: 100%;
+  color: var(--ink);
 }

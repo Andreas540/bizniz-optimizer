@@ -15,9 +15,12 @@
 }
 
 .heroTitle {
-  font-size: 20px;
-  font-weight: 900;
-  line-height: 1.05;
+  font-family: var(--font);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .heroArrows {
@@ -29,11 +32,11 @@
 .arrowBtn {
   border: 0;
   background: transparent;
-  font-size: 28px;
-  font-weight: 900;
+  font-size: 26px;
+  font-weight: 700;
   padding: 4px 8px;
   cursor: pointer;
-  color: var(--ink);
+  color: var(--line);
 }
 
 .videoShell {
@@ -42,7 +45,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* No border, no radius, no background */
 }
 
 .videoViewport {
@@ -59,10 +61,4 @@
   display: block;
   object-fit: contain;
   object-position: center;
-}
-
-@media (min-width: 720px) {
-  .heroTitle {
-    font-size: 22px;
-  }
 }

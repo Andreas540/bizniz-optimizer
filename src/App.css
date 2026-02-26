@@ -1,9 +1,10 @@
 :root {
   --site-w: 520px;
-  --header-h: 112px;
+  --header-h: 100px;
   --ink: #0a0a0a;
   --line: #0b4a63;
   --panel: rgba(148, 196, 230, 0.52);
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -14,11 +15,10 @@ html, body {
 }
 
 body {
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font);
   color: var(--ink);
 
   background:
-    /* Glisten streaks — sharp diagonal light rays */
     linear-gradient(
       118deg,
       rgba(255,255,255,0) 0%,
@@ -33,11 +33,8 @@ body {
       rgba(255,255,255,0.25) 81%,
       rgba(255,255,255,0) 85%
     ),
-    /* Soft specular highlight top-left */
     radial-gradient(ellipse 70% 45% at 18% 12%, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0) 100%),
-    /* Soft specular highlight bottom-right */
     radial-gradient(ellipse 60% 40% at 85% 90%, rgba(210,235,252,0.65) 0%, rgba(210,235,252,0) 100%),
-    /* Base metallic gradient — goes from pale icy blue to deeper steel blue */
     linear-gradient(
       155deg,
       #daeffe 0%,
@@ -80,12 +77,14 @@ body {
 .h2 {
   margin: 0 0 10px;
   font-size: 20px;
-  font-weight: 900;
+  font-weight: 700;
+  font-family: var(--font);
 }
 
 .p {
   margin: 0;
   line-height: 1.4;
   opacity: 0.9;
+  font-family: var(--font);
 }
 
