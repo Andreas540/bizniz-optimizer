@@ -3,8 +3,10 @@ import Header from "./components/Header";
 import VideoHero from "./components/VideoHero";
 import "./App.css";
 
+type SectionId = "intro" | "contact" | "pricing" | "making";
+
 export default function App() {
-  const sections = useMemo(
+  const links = useMemo(
     () => [
       { id: "intro", label: "Introduction videos" },
       { id: "contact", label: "Contact us!" },
@@ -14,26 +16,41 @@ export default function App() {
     []
   );
 
-  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
+    intro: null,
+    contact: null,
+    pricing: null,
+    making: null,
+  });
+
+  const setSectionRef =
+    (id: SectionId) =>
+    (el: HTMLElement | null): void => {
+      sectionRefs.current[id] = el;
+    };
 
   const scrollToSection = (id: string) => {
-    const el = sectionRefs.current[id];
+    const key = id as SectionId;
+    const el = sectionRefs.current[key];
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="page">
-      <Header titleLine1="Get in control of your business" titleLine2="with the Bizniz Optimizer App" links={sections} onNavigate={scrollToSection} />
+    <div className="shell">
+      <Header
+        titleLine1="Get in control of your business"
+        titleLine2="with the Bizniz Optimizer App"
+        links={links}
+        onNavigate={scrollToSection}
+      />
 
       <main className="main">
         <section
-  ref={(el) => {
-    sectionRefs.current["intro"] = el;
-  }}
-  id="intro"
-  className="section section--hero"
->
+          ref={setSectionRef("intro")}
+          id="intro"
+          className="section section--hero"
+        >
           <VideoHero
             items={[
               { title: "Register customers", src: "/videos/register-customers.mp4" },
@@ -44,35 +61,17 @@ export default function App() {
           />
         </section>
 
-        <section
-  ref={(el) => {
-    sectionRefs.current["contact"] = el;
-  }}
-  id="contact"
-  className="section"
->
+        <section ref={setSectionRef("contact")} id="contact" className="section">
           <h2 className="h2">Contact us!</h2>
           <p className="p">Add your contact form / email / CTA here.</p>
         </section>
 
-        <section
-  ref={(el) => {
-    sectionRefs.current["pricing"] = el;
-  }}
-  id="pricing"
-  className="section"
->
+        <section ref={setSectionRef("pricing")} id="pricing" className="section">
           <h2 className="h2">Pricing</h2>
           <p className="p">Add pricing cards here.</p>
         </section>
 
-        <section
-  ref={(el) => {
-    sectionRefs.current["making"] = el;
-  }}
-  id="making"
-  className="section"
->
+        <section ref={setSectionRef("making")} id="making" className="section">
           <h2 className="h2">In the making</h2>
           <p className="p">Roadmap, features, etc.</p>
         </section>

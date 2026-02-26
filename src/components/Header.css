@@ -1,15 +1,15 @@
 .header {
-  position: fixed;
+  position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
-
+  z-index: 50;
+  height: var(--header-h);
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   padding: 14px 12px 10px;
-  z-index: 50;
+  background: rgba(235, 245, 252, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 3px solid var(--line);
 }
 
 .header__title {
@@ -21,10 +21,8 @@
   font-weight: 900;
   font-size: 22px;
   line-height: 1.05;
-  letter-spacing: -0.2px;
 }
 
-/* Burger similar to screenshot */
 .burger {
   width: 54px;
   height: 44px;
@@ -35,6 +33,7 @@
   justify-items: end;
   padding: 6px 4px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .burger span {
@@ -42,42 +41,44 @@
   height: 5px;
   width: 44px;
   background: #0b4a63;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.05) inset;
 }
 
-/* Slide-out menu like your first screenshot */
+/* Dim overlay behind drawer */
 .menuOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.20);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 200ms ease;
+  background: rgba(0, 0, 0, 0.22);
   z-index: 60;
 }
-.menuOverlay--open {
-  opacity: 1;
-  pointer-events: auto;
-}
 
+/*
+  Drawer: position fixed to viewport.
+  HIDDEN by default with both transform (off-screen) AND visibility:hidden.
+  This means it takes up zero visual space and cannot be interacted with when closed.
+*/
 .menu {
   position: fixed;
   top: 0;
   right: 0;
+  bottom: 0;
   width: min(86vw, 360px);
-  height: 100vh;
-  transform: translateX(102%);
-  transition: transform 220ms ease;
-  z-index: 70;
 
-  padding: 92px 14px 18px;
-  background: rgba(235, 245, 252, 0.78);
+  visibility: hidden;
+  transform: translateX(100%);
+  transition: transform 220ms ease, visibility 0s linear 220ms;
+
+  z-index: 70;
+  padding: calc(var(--header-h) + 20px) 14px 18px;
+  background: rgba(235, 245, 252, 0.98);
   backdrop-filter: blur(10px);
   border-left: 3px solid var(--line);
+  overflow-y: auto;
 }
 
 .menu--open {
+  visibility: visible;
   transform: translateX(0);
+  transition: transform 220ms ease, visibility 0s linear 0s;
 }
 
 .menu__nav {
@@ -92,6 +93,6 @@
   font-size: 20px;
   padding: 0 0 12px;
   cursor: pointer;
-
   border-bottom: 3px solid var(--line);
+  width: 100%;
 }
