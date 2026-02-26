@@ -2,11 +2,10 @@ import { useMemo, useRef } from "react";
 import Header from "./components/Header";
 import VideoHero from "./components/VideoHero";
 import ContactSection from "./components/ContactSection";
+import PricingSection from "./components/PricingSection";
 import "./App.css";
 
 type SectionId = "intro" | "contact" | "pricing" | "making";
-
-const HEADER_H = 100; // must match --header-h in App.css
 
 export default function App() {
   const links = useMemo(
@@ -36,9 +35,12 @@ export default function App() {
     const key = id as SectionId;
     const el = sectionRefs.current[key];
     if (!el) return;
-
-    // Manual scroll so the section lands exactly below the sticky header
-    const top = el.getBoundingClientRect().top + window.scrollY - HEADER_H;
+    const headerH = parseInt(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--header-h")
+        .trim()
+    );
+    const top = el.getBoundingClientRect().top + window.scrollY - headerH;
     window.scrollTo({ top, behavior: "smooth" });
   };
 
@@ -72,8 +74,7 @@ export default function App() {
         </section>
 
         <section ref={setSectionRef("pricing")} id="pricing" className="section">
-          <h2 className="h2">Pricing</h2>
-          <p className="p">Add pricing cards here.</p>
+          <PricingSection />
         </section>
 
         <section ref={setSectionRef("making")} id="making" className="section">
