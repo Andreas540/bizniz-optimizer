@@ -1,6 +1,6 @@
 .vmodal-backdrop {
-  position: absolute;   /* inside .shell, not viewport */
-  top: var(--header-total);
+  position: fixed;
+  top: var(--header-total);  /* starts exactly at header bottom */
   left: 0;
   right: 0;
   bottom: 0;
