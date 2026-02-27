@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, useCallback, useState } from "react";
+import { useMemo, useRef, useEffect, useCallback } from "react";
 import Header from "./components/Header";
 import VideoHero from "./components/VideoHero";
 import ContactSection from "./components/ContactSection";
@@ -19,8 +19,8 @@ export default function App() {
     []
   );
 
-  const [, setCurrentIdx] = useState(0);
-  const currentIdxRef = useRef(0); // ref for use inside event listeners
+  // Use a ref for current index — no re-render needed, event listeners read it directly
+  const currentIdxRef = useRef(0);
   const isSnapping = useRef(false);
   const mainRef = useRef<HTMLElement | null>(null);
 
@@ -40,16 +40,14 @@ export default function App() {
     if (clamped === currentIdxRef.current) return;
     isSnapping.current = true;
     currentIdxRef.current = clamped;
-    setCurrentIdx(clamped);
     applyTransforms(clamped);
-    // Unlock after transition completes
     setTimeout(() => { isSnapping.current = false; }, 450);
   }, [applyTransforms]);
 
-  // Initialise positions on mount
+  // Set initial positions
   useEffect(() => { applyTransforms(0); }, [applyTransforms]);
 
-  // Wheel — attached to main container so it doesn't affect anything outside
+  // Wheel
   useEffect(() => {
     const el = mainRef.current;
     if (!el) return;
@@ -60,14 +58,9 @@ export default function App() {
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
       if (isSnapping.current) return;
-
       wheelAccum += e.deltaY;
-
-      // Reset accumulator after brief pause (handles trackpad momentum)
       if (wheelTimer) clearTimeout(wheelTimer);
       wheelTimer = setTimeout(() => { wheelAccum = 0; }, 200);
-
-      // Trigger snap once accumulated delta is large enough
       if (Math.abs(wheelAccum) >= 60) {
         const dir = wheelAccum > 0 ? 1 : -1;
         wheelAccum = 0;
@@ -79,7 +72,7 @@ export default function App() {
     return () => el.removeEventListener("wheel", onWheel);
   }, [goTo]);
 
-  // Touch — also on main container
+  // Touch
   useEffect(() => {
     const el = mainRef.current;
     if (!el) return;
@@ -96,9 +89,7 @@ export default function App() {
       if (isSnapping.current) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       const dx = touchStartX - e.changedTouches[0].clientX;
-      // Ignore horizontal swipes
       if (Math.abs(dx) > Math.abs(dy)) return;
-      // Require intentional swipe
       if (Math.abs(dy) < 40) return;
       goTo(currentIdxRef.current + (dy > 0 ? 1 : -1));
     };
