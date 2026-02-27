@@ -1,19 +1,19 @@
 .vmodal-backdrop {
   position: fixed;
-  top: var(--header-total);
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;                /* full screen — no gap */
   background: rgba(0, 0, 0, 0.75);
   z-index: 200;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 8px 20px 16px;
+  /* Push the modal box down, not the backdrop */
+  padding-top: var(--header-total);
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 16px;
 }
 
 .vmodal {
-  /* Explicit dvh calculation — no variable dependencies */
   height: min(calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px) - 24px), 680px);
   width: min(
     calc(min(calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px) - 24px), 680px) * 0.619),
