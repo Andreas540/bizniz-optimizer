@@ -1,9 +1,16 @@
 import { useState } from "react";
 import "./PricingSection.css";
+import VideoModal from "./VideoModal";
 
 const PRICE = 9.99;
 
-type Feature = { label: string; hasPreview?: boolean };
+type Feature = {
+  label: string;
+  hasPreview?: boolean;
+  videoSrc?: string;
+  videoTitle?: string;
+};
+
 type Module = {
   id: string;
   name: string;
@@ -22,11 +29,11 @@ const MODULES: Module[] = [
     required: true,
     features: [
       { label: "Dashboard" },
-      { label: "Customers", hasPreview: true },
-      { label: "New Order", hasPreview: true },
-      { label: "New Payment", hasPreview: true },
+      { label: "Customers",    hasPreview: true, videoSrc: "/videos/register-customers.mp4", videoTitle: "Customers" },
+      { label: "New Order",    hasPreview: true, videoSrc: "/videos/register-orders.mp4",    videoTitle: "New Order" },
+      { label: "New Payment",  hasPreview: true, videoSrc: "/videos/register-payments.mp4",  videoTitle: "New Payment" },
       { label: "Partners" },
-      { label: "Products", hasPreview: true },
+      { label: "Products",     hasPreview: true, videoSrc: "/videos/register-products.mp4",  videoTitle: "Products" },
       { label: "Price Checker" },
       { label: "Create Invoice" },
       { label: "Costs" },
@@ -78,9 +85,12 @@ function initState(): Record<string, ModuleState> {
   return s;
 }
 
+type ModalVideo = { src: string; title: string };
+
 export default function PricingSection() {
   const [state, setState] = useState<Record<string, ModuleState>>(initState);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [modal, setModal] = useState<ModalVideo | null>(null);
 
   const monthlyCost = MODULES.reduce((sum, m) => {
     if (m.freeModule) return sum;
@@ -125,92 +135,109 @@ export default function PricingSection() {
     : MODULES;
 
   return (
-    <div className="pricing-scroll">
-      <div className="pricing">
-        <h2 className="pricing__title">Previews, Pricing and Purchase</h2>
+    <>
+      <div className="pricing-scroll">
+        <div className="pricing">
+          <h2 className="pricing__title">Previews, Pricing and Purchase</h2>
 
-        <div className="pricing__boxes">
-          <div className="pricing__box">
-            <span className="pricing__box-price">Only ${PRICE.toFixed(2)}/month</span>
-            <span>- Per user</span>
-            <span>- Per module</span>
+          <div className="pricing__boxes">
+            <div className="pricing__box">
+              <span className="pricing__box-price">Only ${PRICE.toFixed(2)}/month</span>
+              <span>- Per user</span>
+              <span>- Per module</span>
+            </div>
+            <div className="pricing__box pricing__box--calc">
+              <span className="pricing__box-label">Your monthly cost (ex. taxes):</span>
+              <span className="pricing__box-total">${monthlyCost.toFixed(2)}</span>
+            </div>
           </div>
-          <div className="pricing__box pricing__box--calc">
-            <span className="pricing__box-label">Your monthly cost (ex. taxes):</span>
-            <span className="pricing__box-total">${monthlyCost.toFixed(2)}</span>
-          </div>
-        </div>
 
-        <p className="pricing__modules-title">Modules:</p>
+          <p className="pricing__modules-title">Modules:</p>
 
-        <div className="pricing__modules">
-          {visibleModules.map((mod) => {
-            const s = state[mod.id];
-            const isExpanded = expanded === mod.id;
+          <div className="pricing__modules">
+            {visibleModules.map((mod) => {
+              const s = state[mod.id];
+              const isExpanded = expanded === mod.id;
 
-            return (
-              <div key={mod.id} className="pricing__module">
-                <div className="pricing__module-header">
-                  <div className="pricing__module-info" onClick={() => toggleExpand(mod.id)}>
-                    <span className="pricing__module-name">
-                      {mod.name}
-                      {mod.tag && (
-                        <span className="pricing__tag--green"> {mod.tag.text}</span>
-                      )}
-                    </span>
-                    <span className="pricing__toggle-label">
-                      {isExpanded ? "Click to hide all features" : "Click to see all features"}
-                    </span>
+              return (
+                <div key={mod.id} className="pricing__module">
+                  <div className="pricing__module-header">
+                    <div className="pricing__module-info" onClick={() => toggleExpand(mod.id)}>
+                      <span className="pricing__module-name">
+                        {mod.name}
+                        {mod.tag && (
+                          <span className="pricing__tag--green"> {mod.tag.text}</span>
+                        )}
+                      </span>
+                      <span className="pricing__toggle-label">
+                        {isExpanded ? "Click to hide all features" : "Click to see all features"}
+                      </span>
+                    </div>
+
+                    <div className="pricing__controls">
+                      <button
+                        className={`pricing__check ${s.checked ? "pricing__check--on" : ""} ${mod.required ? "pricing__check--locked" : ""}`}
+                        onClick={() => toggleCheck(mod.id)}
+                        aria-label={s.checked ? "Uncheck module" : "Check module"}
+                      >
+                        {s.checked && (
+                          <svg viewBox="0 0 12 10" fill="none">
+                            <polyline points="1,5 4.5,8.5 11,1" stroke="#0b4a63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </button>
+
+                      <select
+                        className={`pricing__users ${!s.checked || mod.noUserEdit ? "pricing__users--inactive" : ""}`}
+                        value={s.users}
+                        disabled={!s.checked || !!mod.noUserEdit}
+                        onChange={(e) => setUsers(mod.id, Number(e.target.value))}
+                      >
+                        {[1, 2, 3, 4, 5].map((n) => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </select>
+                      <span className={`pricing__users-label ${!s.checked ? "pricing__users-label--inactive" : ""}`}>
+                        User(s)
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="pricing__controls">
-                    <button
-                      className={`pricing__check ${s.checked ? "pricing__check--on" : ""} ${mod.required ? "pricing__check--locked" : ""}`}
-                      onClick={() => toggleCheck(mod.id)}
-                      aria-label={s.checked ? "Uncheck module" : "Check module"}
-                    >
-                      {s.checked && (
-                        <svg viewBox="0 0 12 10" fill="none">
-                          <polyline points="1,5 4.5,8.5 11,1" stroke="#0b4a63" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      )}
-                    </button>
-
-                    <select
-                      className={`pricing__users ${!s.checked || mod.noUserEdit ? "pricing__users--inactive" : ""}`}
-                      value={s.users}
-                      disabled={!s.checked || !!mod.noUserEdit}
-                      onChange={(e) => setUsers(mod.id, Number(e.target.value))}
-                    >
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <option key={n} value={n}>{n}</option>
+                  {isExpanded && (
+                    <ul className="pricing__features">
+                      {mod.features.map((f, i) => (
+                        <li key={i} className="pricing__feature">
+                          <span>- {f.label}</span>
+                          {f.hasPreview && f.videoSrc && (
+                            <button
+                              className="pricing__preview-btn"
+                              onClick={() => setModal({ src: f.videoSrc!, title: f.videoTitle ?? f.label })}
+                            >
+                              (preview)
+                            </button>
+                          )}
+                        </li>
                       ))}
-                    </select>
-                    <span className={`pricing__users-label ${!s.checked ? "pricing__users-label--inactive" : ""}`}>
-                      User(s)
-                    </span>
-                  </div>
+                    </ul>
+                  )}
                 </div>
+              );
+            })}
+          </div>
 
-                {isExpanded && (
-                  <ul className="pricing__features">
-                    {mod.features.map((f, i) => (
-                      <li key={i} className="pricing__feature">
-                        <span>- {f.label}</span>
-                        {f.hasPreview && <span className="pricing__preview"> (preview)</span>}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="pricing__cta">
-          <button className="pricing__btn">Proceed to Check out</button>
+          <div className="pricing__cta">
+            <button className="pricing__btn">Proceed to Check out</button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {modal && (
+        <VideoModal
+          src={modal.src}
+          title={modal.title}
+          onClose={() => setModal(null)}
+        />
+      )}
+    </>
   );
 }
