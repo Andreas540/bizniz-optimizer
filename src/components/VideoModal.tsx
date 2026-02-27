@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import "./VideoModal.css";
 
 type Props = {
@@ -10,7 +11,6 @@ type Props = {
 export default function VideoModal({ title, src, onClose }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Autoplay when opened
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -18,14 +18,13 @@ export default function VideoModal({ title, src, onClose }: Props) {
     v.play().catch(() => {});
   }, [src]);
 
-  // Close on Escape
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div className="vmodal-backdrop" onClick={onClose}>
       <div className="vmodal" onClick={(e) => e.stopPropagation()}>
         <div className="vmodal__header">
@@ -45,6 +44,7 @@ export default function VideoModal({ title, src, onClose }: Props) {
           />
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

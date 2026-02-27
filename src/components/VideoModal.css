@@ -7,7 +7,7 @@
   align-items: flex-start;
   justify-content: center;
   /* Push the modal box down, not the backdrop */
-  padding-top: 100px;
+  padding-top: var(--header-total);
   padding-left: 20px;
   padding-right: 20px;
   padding-bottom: 16px;
