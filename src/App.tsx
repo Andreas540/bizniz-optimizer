@@ -126,7 +126,7 @@ export default function App() {
       { title: "Register payments",  src: "/videos/register-payments.mp4" },
     ]}
   /> */}
-  <QuoteAnimation />
+  <QuoteAnimation onNavigate={scrollToSection} />   {/* ← just add the prop here */}
 </section>
 
           <section ref={setSectionRef("contact")} id="contact" className="section">

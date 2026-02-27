@@ -11,8 +11,6 @@ const QUOTES = [
   "What if it was all in one place?",
 ];
 
-// Fixed positions spread across the screen (percentages)
-// Kept away from edges so text doesn't overflow the 520px shell
 const POSITIONS: { x: number; y: number }[] = [
   { x: 8,  y: 10 },
   { x: 50, y: 6  },
@@ -23,27 +21,40 @@ const POSITIONS: { x: number; y: number }[] = [
   { x: 24, y: 28 },
 ];
 
-const FADE_IN   = 600;   // ms — quote fades in
-const HOLD      = 2400;  // ms — quote stays fully visible
-const FADE_OUT  = 700;   // ms — quote fades out
-const QUOTE_DUR = FADE_IN + HOLD + FADE_OUT; // 3700ms total
-const INTERVAL  = 1700;  // ms — new quote appears every 1700ms (creates overlap)
+const FADE_IN   = 600;
+const HOLD      = 2400;
+const FADE_OUT  = 700;
+const QUOTE_DUR = FADE_IN + HOLD + FADE_OUT;
+const INTERVAL  = 1700;
 
-export default function QuoteAnimation() {
-  const [visible, setVisible]       = useState<number[]>([]);
-  const [fading, setFading]         = useState<Set<number>>(new Set());
-  const [showPunchline, setShowPunchline] = useState(false);
+const MENU_ITEMS = [
+  { label: "Previews",    id: null      },
+  { label: "Contact us!", id: "contact" },
+  { label: "Pricing",     id: "pricing" },
+  { label: "Q&A",         id: null      },
+];
+
+interface Props {
+  onNavigate?: (id: string) => void;
+}
+
+export default function QuoteAnimation({ onNavigate }: Props) {
+  const [visible, setVisible]               = useState<number[]>([]);
+  const [fading, setFading]                 = useState<Set<number>>(new Set());
+  const [showPunchline, setShowPunchline]   = useState(false);
+  const [punchlineMoved, setPunchlineMoved] = useState(false);
+  const [visibleItems, setVisibleItems]     = useState<number[]>([]);
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
     QUOTES.forEach((_, i) => {
-      // Fade in
+      // Appear
       timers.push(setTimeout(() => {
         setVisible(v => [...v, i]);
       }, i * INTERVAL));
 
-      // Start fade out
+      // Start fade-out
       timers.push(setTimeout(() => {
         setFading(f => new Set([...f, i]));
       }, i * INTERVAL + FADE_IN + HOLD));
@@ -55,15 +66,31 @@ export default function QuoteAnimation() {
       }, i * INTERVAL + QUOTE_DUR));
     });
 
-    // Punchline appears as the last quote starts fading
-    const punchlineDelay = (QUOTES.length - 1) * INTERVAL + FADE_IN + HOLD;
-    timers.push(setTimeout(() => setShowPunchline(true), punchlineDelay));
+    // Punchline fades in centred
+    const punchlineAt = (QUOTES.length - 1) * INTERVAL + FADE_IN + HOLD;
+    timers.push(setTimeout(() => setShowPunchline(true), punchlineAt));
+
+    // After 2 s centred → move up
+    const moveAt = punchlineAt + 2000;
+    timers.push(setTimeout(() => setPunchlineMoved(true), moveAt));
+
+    // Menu items appear one-by-one after the move transition settles (400 ms)
+    MENU_ITEMS.forEach((_, i) => {
+      timers.push(setTimeout(() => {
+        setVisibleItems(v => [...v, i]);
+      }, moveAt + 450 + i * 220));
+    });
 
     return () => timers.forEach(clearTimeout);
   }, []);
 
+  const handleClick = (id: string | null) => {
+    if (id && onNavigate) onNavigate(id);
+  };
+
   return (
     <div className="qa">
+      {/* Floating quotes */}
       {visible.map(i => (
         <span
           key={i}
@@ -74,10 +101,27 @@ export default function QuoteAnimation() {
         </span>
       ))}
 
+      {/* Punchline + menu — single block that slides up */}
       {showPunchline && (
-        <div className="qa__punchline">
-          <span className="qa__punchline-main">Get in control.</span>
-          <span className="qa__punchline-sub">Meet the Bizniz Optimizer.</span>
+        <div className={`qa__end${punchlineMoved ? " qa__end--moved" : ""}`}>
+          <div className="qa__punchline">
+            <span className="qa__punchline-main">Get in control.</span>
+            <span className="qa__punchline-sub">Meet the Bizniz Optimizer.</span>
+          </div>
+
+          <nav className="qa__menu">
+            {MENU_ITEMS.map((item, i) => (
+              <button
+                key={item.label}
+                className={`qa__menu-item${visibleItems.includes(i) ? " qa__menu-item--visible" : ""}${!item.id ? " qa__menu-item--dead" : ""}`}
+                onClick={() => handleClick(item.id)}
+                disabled={!item.id}
+              >
+                <img src="/images/logo-cropped.png" alt="" className="qa__menu-logo" />
+                <span className="qa__menu-label">{item.label}</span>
+              </button>
+            ))}
+          </nav>
         </div>
       )}
     </div>
