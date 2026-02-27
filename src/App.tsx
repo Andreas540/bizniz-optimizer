@@ -18,6 +18,8 @@ export default function App() {
     []
   );
 
+  const mainRef = useRef<HTMLElement | null>(null);
+
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
     intro: null,
     contact: null,
@@ -34,14 +36,10 @@ export default function App() {
   const scrollToSection = (id: string) => {
     const key = id as SectionId;
     const el = sectionRefs.current[key];
-    if (!el) return;
-    const headerH = parseInt(
-      getComputedStyle(document.documentElement)
-        .getPropertyValue("--header-h")
-        .trim()
-    );
-    const top = el.getBoundingClientRect().top + window.scrollY - headerH;
-    window.scrollTo({ top, behavior: "smooth" });
+    const main = mainRef.current;
+    if (!el || !main) return;
+    // Scroll the snap container to the section's offsetTop
+    main.scrollTo({ top: el.offsetTop, behavior: "smooth" });
   };
 
   return (
@@ -53,7 +51,7 @@ export default function App() {
         onNavigate={scrollToSection}
       />
 
-      <main className="main">
+      <main className="main" ref={mainRef}>
         <section
           ref={setSectionRef("intro")}
           id="intro"
@@ -78,8 +76,8 @@ export default function App() {
         </section>
 
         <section ref={setSectionRef("making")} id="making" className="section">
-          <h2 className="h2">In the making</h2>
-          <p className="p">Roadmap, features, etc.</p>
+          <h2 className="h2" style={{ padding: "28px 16px 10px" }}>In the making</h2>
+          <p className="p" style={{ padding: "0 16px" }}>Roadmap, features, etc.</p>
         </section>
       </main>
     </div>

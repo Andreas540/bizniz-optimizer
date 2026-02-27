@@ -50,29 +50,37 @@ body {
 .shell {
   width: min(var(--site-w), 100%);
   margin: 0 auto;
-  min-height: 100vh;
-  /*
-    overflow-x: clip clips visually like hidden but does NOT create a
-    scroll container — so position:sticky on the header still works.
-  */
   overflow-x: clip;
   box-shadow: 0 0 0 1px rgba(11,74,99,0.15), 0 8px 40px rgba(0,0,0,0.10);
 }
 
+/* Sticky header sits outside the scroll container */
+/* Main is the snap scroll container */
 .main {
-  padding: 12px 12px 28px;
+  height: calc(100dvh - var(--header-h));
+  overflow-y: scroll;
+  /* Snap container */
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0;
 }
 
+/* Each section snaps into place */
 .section {
-  padding: 28px 0;
-  scroll-margin-top: var(--header-h);
+  /* Snap child */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  /* Exactly one screen tall */
+  height: calc(100dvh - var(--header-h));
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
+/* Hero section */
 .section--hero {
-  padding-top: 10px;
-  padding-bottom: 0;
-  height: calc(100dvh - var(--header-h) - 22px);
   display: flex;
+  flex-direction: column;
+  padding: 10px 12px 0;
 }
 
 .h2 {
