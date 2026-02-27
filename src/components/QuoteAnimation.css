@@ -38,9 +38,9 @@
   to   { opacity: 0; transform: translateY(-8px); }
 }
 
-/* ── End block — handles ONLY position, NO animation here ──
-   The keyframe animation lives on the children so that
-   transform is free to transition for the slide.            */
+/* ── End block — position only, NO animation here ──────────
+   During the centred phase the nav is not in the DOM,
+   so translateY(-50%) centres only the punchline text.      */
 .qa__end {
   position: absolute;
   left: 28px;
@@ -51,18 +51,17 @@
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  /* Only these two properties slide — no keyframe conflict */
-  transition: top 500ms cubic-bezier(0.4, 0, 0.2, 1),
-              transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* Slow, smooth glide upward */
+  transition: top 900ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 900ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Slide down from center to final resting spot */
 .qa__end--moved {
-  top: 110px;         /* comfortable gap below header */
+  top: 110px;
   transform: translateY(0);
 }
 
-/* ── Punchline — fade-in animation lives HERE, not on parent */
+/* ── Punchline — fade-in animation lives here ───────────── */
 .qa__punchline {
   display: flex;
   flex-direction: column;
