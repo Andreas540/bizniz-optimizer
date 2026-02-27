@@ -17,7 +17,6 @@ html, body {
 body {
   font-family: var(--font);
   color: var(--ink);
-
   background:
     linear-gradient(
       118deg,
@@ -54,25 +53,31 @@ body {
   box-shadow: 0 0 0 1px rgba(11,74,99,0.15), 0 8px 40px rgba(0,0,0,0.10);
 }
 
-/* Snap scroll container */
+/*
+  .main is the snap viewport — no CSS snap, JS handles it.
+  overflow: hidden so no accidental scroll bleeding.
+*/
 .main {
   height: calc(100dvh - var(--header-h));
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   padding: 0;
+  position: relative;
 }
 
 /*
-  Sections must NOT have overflow-y: auto — that creates a nested scroll
-  container which fights the parent and causes the resistance.
-  overflow: hidden clips content cleanly without interfering.
+  Each section is full height.
+  Sections are stacked via JS transform, not scroll position.
 */
 .section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   height: calc(100dvh - var(--header-h));
   overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* JS sets transform: translateY(...) */
+  will-change: transform;
+  transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .section--hero {
