@@ -74,13 +74,13 @@ export default function QuoteAnimation({ onNavigate }: Props) {
 
     // Mount the nav roughly halfway through the slide (450ms in)
     // so it appears to grow in naturally as the block settles
-    timers.push(setTimeout(() => setShowMenu(true), moveAt + 450));
+    timers.push(setTimeout(() => setShowMenu(true), moveAt + 920));
 
     // Menu items appear one-by-one after nav is mounted
     MENU_ITEMS.forEach((_, i) => {
       timers.push(setTimeout(() => {
         setVisibleItems(v => [...v, i]);
-      }, moveAt + 500 + i * 300));
+      }, moveAt + 970 + i * 300));
     });
 
     return () => timers.forEach(clearTimeout);
