@@ -212,7 +212,6 @@ export default function ContactSection() {
   const handleSubmit = async () => {
     const e = validate(fields);
     if (Object.keys(e).length) { setErrors(e); return; }
-
     setSubmitting(true);
     try {
       const body = new FormData();
@@ -221,11 +220,9 @@ export default function ContactSection() {
       body.append("email", fields.email);
       body.append("phone", `${fields.countryCode} ${fields.phone}`);
       body.append("message", fields.message);
-
       await fetch("/", { method: "POST", body });
       setSent(true);
     } catch {
-      // Still show success — Netlify may return non-200 in local dev
       setSent(true);
     } finally {
       setSubmitting(false);
@@ -233,114 +230,61 @@ export default function ContactSection() {
   };
 
   return (
-    <div className="contact">
-      <h2 className="contact__heading">
-        Contact us for questions or a personal demo
-      </h2>
+    <div className="contact-scroll">
+      <div className="contact">
+        <h2 className="contact__heading">
+          Contact us for questions or a personal demo
+        </h2>
 
-      {/* Field: Full Name */}
-      <div className="contact__field">
-        <label className="contact__label">
-          Full Name <span className="contact__req">*</span>
-        </label>
-        <input
-          className={`contact__input ${errors.name ? "contact__input--error" : ""}`}
-          type="text"
-          value={fields.name}
-          onChange={set("name")}
-          placeholder="Your full name"
-        />
-        {errors.name && <span className="contact__error">{errors.name}</span>}
-      </div>
-
-      {/* Field: Email */}
-      <div className="contact__field">
-        <label className="contact__label">
-          Email <span className="contact__req">*</span>
-        </label>
-        <input
-          className={`contact__input ${errors.email ? "contact__input--error" : ""}`}
-          type="email"
-          value={fields.email}
-          onChange={set("email")}
-          placeholder="you@example.com"
-        />
-        {errors.email && <span className="contact__error">{errors.email}</span>}
-      </div>
-
-      {/* Field: Phone */}
-      <div className="contact__field">
-        <label className="contact__label">
-          Phone <span className="contact__req">*</span>
-        </label>
-        <div className="contact__phone-row">
-          <select
-            className="contact__select"
-            value={fields.countryCode}
-            onChange={set("countryCode")}
-          >
-            {COUNTRY_CODES.map((c, i) =>
-              c.disabled ? (
-                <option key={i} disabled>
-                  {c.name}
-                </option>
-              ) : (
-                <option key={i} value={c.code}>
-                  {c.flag} {c.name} ({c.code})
-                </option>
-              )
-            )}
-          </select>
-          <input
-            className={`contact__input contact__input--phone ${errors.phone ? "contact__input--error" : ""}`}
-            type="tel"
-            value={fields.phone}
-            onChange={set("phone")}
-            placeholder="Phone number"
-          />
+        <div className="contact__field">
+          <label className="contact__label">Full Name <span className="contact__req">*</span></label>
+          <input className={`contact__input ${errors.name ? "contact__input--error" : ""}`} type="text" value={fields.name} onChange={set("name")} placeholder="Your full name" />
+          {errors.name && <span className="contact__error">{errors.name}</span>}
         </div>
-        {errors.phone && <span className="contact__error">{errors.phone}</span>}
-      </div>
 
-      {/* Field: Message */}
-      <div className="contact__field">
-        <label className="contact__label">Questions or other message</label>
-        <textarea
-          className="contact__textarea"
-          value={fields.message}
-          onChange={set("message")}
-          placeholder="Write your message here…"
-          rows={5}
-        />
-      </div>
+        <div className="contact__field">
+          <label className="contact__label">Email <span className="contact__req">*</span></label>
+          <input className={`contact__input ${errors.email ? "contact__input--error" : ""}`} type="email" value={fields.email} onChange={set("email")} placeholder="you@example.com" />
+          {errors.email && <span className="contact__error">{errors.email}</span>}
+        </div>
 
-      <button
-        className="contact__btn"
-        onClick={handleSubmit}
-        disabled={submitting}
-      >
-        {submitting ? "Sending…" : "Send"}
-      </button>
-
-      {/* Success modal */}
-      {sent && (
-        <div className="contact__modal-backdrop" onClick={() => setSent(false)}>
-          <div className="contact__modal" onClick={(e) => e.stopPropagation()}>
-            <p className="contact__modal-line1">Thanks for contacting us!</p>
-            <p className="contact__modal-line2">
-              We will get back to you as soon as possible.
-            </p>
-            <img
-              src="/images/logo-cropped.png"
-              alt="Bizniz Optimizer"
-              className="contact__modal-logo"
-            />
-            <button className="contact__modal-close" onClick={() => setSent(false)}>
-              Close
-            </button>
+        <div className="contact__field">
+          <label className="contact__label">Phone <span className="contact__req">*</span></label>
+          <div className="contact__phone-row">
+            <select className="contact__select" value={fields.countryCode} onChange={set("countryCode")}>
+              {COUNTRY_CODES.map((c, i) =>
+                c.disabled ? (
+                  <option key={i} disabled>{c.name}</option>
+                ) : (
+                  <option key={i} value={c.code}>{c.flag} {c.name} ({c.code})</option>
+                )
+              )}
+            </select>
+            <input className={`contact__input contact__input--phone ${errors.phone ? "contact__input--error" : ""}`} type="tel" value={fields.phone} onChange={set("phone")} placeholder="Phone number" />
           </div>
+          {errors.phone && <span className="contact__error">{errors.phone}</span>}
         </div>
-      )}
+
+        <div className="contact__field">
+          <label className="contact__label">Questions or other message</label>
+          <textarea className="contact__textarea" value={fields.message} onChange={set("message")} placeholder="Write your message here…" rows={5} />
+        </div>
+
+        <button className="contact__btn" onClick={handleSubmit} disabled={submitting}>
+          {submitting ? "Sending…" : "Send"}
+        </button>
+
+        {sent && (
+          <div className="contact__modal-backdrop" onClick={() => setSent(false)}>
+            <div className="contact__modal" onClick={(e) => e.stopPropagation()}>
+              <p className="contact__modal-line1">Thanks for contacting us!</p>
+              <p className="contact__modal-line2">We will get back to you as soon as possible.</p>
+              <img src="/images/logo-cropped.png" alt="Bizniz Optimizer" className="contact__modal-logo" />
+              <button className="contact__modal-close" onClick={() => setSent(false)}>Close</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

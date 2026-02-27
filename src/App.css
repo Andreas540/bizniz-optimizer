@@ -54,29 +54,27 @@ body {
   box-shadow: 0 0 0 1px rgba(11,74,99,0.15), 0 8px 40px rgba(0,0,0,0.10);
 }
 
-/* Sticky header sits outside the scroll container */
-/* Main is the snap scroll container */
+/* Snap scroll container */
 .main {
   height: calc(100dvh - var(--header-h));
   overflow-y: scroll;
-  /* Snap container */
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
   padding: 0;
 }
 
-/* Each section snaps into place */
+/*
+  Sections must NOT have overflow-y: auto — that creates a nested scroll
+  container which fights the parent and causes the resistance.
+  overflow: hidden clips content cleanly without interfering.
+*/
 .section {
-  /* Snap child */
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  /* Exactly one screen tall */
   height: calc(100dvh - var(--header-h));
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
-/* Hero section */
 .section--hero {
   display: flex;
   flex-direction: column;
