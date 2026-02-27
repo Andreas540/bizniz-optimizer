@@ -67,15 +67,15 @@ export default function QuoteAnimation({ onNavigate }: Props) {
     const punchlineAt = (QUOTES.length - 1) * INTERVAL + FADE_IN + HOLD;
     timers.push(setTimeout(() => setShowPunchline(true), punchlineAt));
 
-    // After 2 s centred → slide up
+    // After 2 s centred → slide down to final position
     const moveAt = punchlineAt + 2000;
     timers.push(setTimeout(() => setPunchlineMoved(true), moveAt));
 
-    // Menu items appear one-by-one after slide settles (500ms transition + small buffer)
+    // Menu items appear one-by-one after slide settles
     MENU_ITEMS.forEach((_, i) => {
       timers.push(setTimeout(() => {
         setVisibleItems(v => [...v, i]);
-      }, moveAt + 550 + i * 300));   // 300ms between each item (was 220ms)
+      }, moveAt + 550 + i * 300));
     });
 
     return () => timers.forEach(clearTimeout);

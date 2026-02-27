@@ -38,12 +38,9 @@
   to   { opacity: 0; transform: translateY(-8px); }
 }
 
-/* ── End block (punchline + menu) ───────────────────────── */
-/*
-  Starts perfectly centred using top:50% + translateY(-50%).
-  On --moved we shift to a fixed top position with translateY(0).
-  Both top and transform are transitioned → smooth slide.
-*/
+/* ── End block — handles ONLY position, NO animation here ──
+   The keyframe animation lives on the children so that
+   transform is free to transition for the slide.            */
 .qa__end {
   position: absolute;
   left: 28px;
@@ -54,28 +51,30 @@
   flex-direction: column;
   align-items: center;
   gap: 32px;
+  /* Only these two properties slide — no keyframe conflict */
   transition: top 500ms cubic-bezier(0.4, 0, 0.2, 1),
               transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
-  animation: qa-punchline-in 1.1s ease forwards;
 }
 
+/* Slide down from center to final resting spot */
 .qa__end--moved {
-  top: 90px;          /* a bit of breathing room below the header */
+  top: 110px;         /* comfortable gap below header */
   transform: translateY(0);
 }
 
-@keyframes qa-punchline-in {
-  from { opacity: 0; transform: translateY(calc(-50% + 6px)) scale(0.97); }
-  to   { opacity: 1; transform: translateY(-50%) scale(1); }
-}
-
-/* ── Punchline text ─────────────────────────────────────── */
+/* ── Punchline — fade-in animation lives HERE, not on parent */
 .qa__punchline {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   text-align: center;
+  animation: qa-punchline-in 1.1s ease forwards;
+}
+
+@keyframes qa-punchline-in {
+  from { opacity: 0; transform: scale(0.97) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);   }
 }
 
 .qa__punchline-main {
@@ -102,7 +101,7 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  max-width: 240px;   /* slightly narrower than before */
+  max-width: 240px;
 }
 
 .qa__menu-item {
