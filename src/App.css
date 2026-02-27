@@ -9,9 +9,11 @@
 
 * { box-sizing: border-box; }
 
+/* Prevent the page itself from ever scrolling — sections handle motion via JS */
 html, body {
   margin: 0;
-  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -46,38 +48,33 @@ body {
     );
 }
 
+/* Full width on mobile, centered on desktop */
 .shell {
   width: min(var(--site-w), 100%);
+  height: 100%;
   margin: 0 auto;
-  overflow-x: clip;
+  overflow: hidden;
   box-shadow: 0 0 0 1px rgba(11,74,99,0.15), 0 8px 40px rgba(0,0,0,0.10);
+  display: flex;
+  flex-direction: column;
 }
 
-/*
-  .main is the snap viewport — no CSS snap, JS handles it.
-  overflow: hidden so no accidental scroll bleeding.
-*/
 .main {
-  height: calc(100dvh - var(--header-h));
+  flex: 1;
   overflow: hidden;
-  padding: 0;
   position: relative;
 }
 
-/*
-  Each section is full height.
-  Sections are stacked via JS transform, not scroll position.
-*/
 .section {
-  height: calc(100dvh - var(--header-h));
-  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  /* JS sets transform: translateY(...) */
+  /* Explicit 100% width so sections never appear narrower than the shell */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   will-change: transform;
-  transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .section--hero {

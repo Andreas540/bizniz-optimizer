@@ -19,59 +19,73 @@ export default function App() {
     []
   );
 
-  const [currentIdx, setCurrentIdx] = useState(0);
+  const [, setCurrentIdx] = useState(0);
+  const currentIdxRef = useRef(0); // ref for use inside event listeners
+  const isSnapping = useRef(false);
+  const mainRef = useRef<HTMLElement | null>(null);
+
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
     intro: null, contact: null, pricing: null, making: null,
   });
 
-  // Position all sections via transform
   const applyTransforms = useCallback((idx: number) => {
     SECTION_IDS.forEach((id, i) => {
       const el = sectionRefs.current[id];
-      if (!el) return;
-      el.style.transform = `translateY(${(i - idx) * 100}%)`;
+      if (el) el.style.transform = `translateY(${(i - idx) * 100}%)`;
     });
   }, []);
 
-  // On mount, position sections
-  useEffect(() => {
-    applyTransforms(0);
-  }, [applyTransforms]);
-
   const goTo = useCallback((idx: number) => {
     const clamped = Math.max(0, Math.min(SECTION_IDS.length - 1, idx));
+    if (clamped === currentIdxRef.current) return;
+    isSnapping.current = true;
+    currentIdxRef.current = clamped;
     setCurrentIdx(clamped);
     applyTransforms(clamped);
+    // Unlock after transition completes
+    setTimeout(() => { isSnapping.current = false; }, 450);
   }, [applyTransforms]);
 
-  // Wheel snap
+  // Initialise positions on mount
+  useEffect(() => { applyTransforms(0); }, [applyTransforms]);
+
+  // Wheel — attached to main container so it doesn't affect anything outside
   useEffect(() => {
-    let lastSnap = 0;
+    const el = mainRef.current;
+    if (!el) return;
+
+    let wheelAccum = 0;
+    let wheelTimer: ReturnType<typeof setTimeout> | null = null;
+
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      const now = Date.now();
-      // Throttle: ignore events within 600ms of last snap
-      if (now - lastSnap < 600) return;
-      // Only snap on intentional scroll (skip tiny trackpad drift)
-      if (Math.abs(e.deltaY) < 30) return;
-      lastSnap = now;
-      setCurrentIdx((prev) => {
-        const next = e.deltaY > 0 ? prev + 1 : prev - 1;
-        const clamped = Math.max(0, Math.min(SECTION_IDS.length - 1, next));
-        applyTransforms(clamped);
-        return clamped;
-      });
+      if (isSnapping.current) return;
+
+      wheelAccum += e.deltaY;
+
+      // Reset accumulator after brief pause (handles trackpad momentum)
+      if (wheelTimer) clearTimeout(wheelTimer);
+      wheelTimer = setTimeout(() => { wheelAccum = 0; }, 200);
+
+      // Trigger snap once accumulated delta is large enough
+      if (Math.abs(wheelAccum) >= 60) {
+        const dir = wheelAccum > 0 ? 1 : -1;
+        wheelAccum = 0;
+        goTo(currentIdxRef.current + dir);
+      }
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, [applyTransforms]);
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [goTo]);
 
-  // Touch snap
+  // Touch — also on main container
   useEffect(() => {
+    const el = mainRef.current;
+    if (!el) return;
+
     let touchStartY = 0;
     let touchStartX = 0;
-    let lastSnap = 0;
 
     const onTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
@@ -79,33 +93,23 @@ export default function App() {
     };
 
     const onTouchEnd = (e: TouchEvent) => {
+      if (isSnapping.current) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
       const dx = touchStartX - e.changedTouches[0].clientX;
-      const now = Date.now();
-
-      // Ignore mostly-horizontal swipes
+      // Ignore horizontal swipes
       if (Math.abs(dx) > Math.abs(dy)) return;
-      // Require meaningful swipe distance
+      // Require intentional swipe
       if (Math.abs(dy) < 40) return;
-      // Throttle
-      if (now - lastSnap < 600) return;
-      lastSnap = now;
-
-      setCurrentIdx((prev) => {
-        const next = dy > 0 ? prev + 1 : prev - 1;
-        const clamped = Math.max(0, Math.min(SECTION_IDS.length - 1, next));
-        applyTransforms(clamped);
-        return clamped;
-      });
+      goTo(currentIdxRef.current + (dy > 0 ? 1 : -1));
     };
 
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
     return () => {
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
     };
-  }, [applyTransforms]);
+  }, [goTo]);
 
   const scrollToSection = useCallback((id: string) => {
     const idx = SECTION_IDS.indexOf(id as SectionId);
@@ -114,8 +118,9 @@ export default function App() {
 
   const setSectionRef = (id: SectionId) => (el: HTMLElement | null) => {
     sectionRefs.current[id] = el;
-    // Re-apply transforms whenever a ref is set
-    if (el) el.style.transform = `translateY(${(SECTION_IDS.indexOf(id) - currentIdx) * 100}%)`;
+    if (el) {
+      el.style.transform = `translateY(${(SECTION_IDS.indexOf(id) - currentIdxRef.current) * 100}%)`;
+    }
   };
 
   return (
@@ -127,7 +132,7 @@ export default function App() {
         onNavigate={scrollToSection}
       />
 
-      <main className="main">
+      <main className="main" ref={mainRef}>
         <section ref={setSectionRef("intro")} id="intro" className="section section--hero">
           <VideoHero
             items={[
