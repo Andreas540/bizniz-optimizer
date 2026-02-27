@@ -49,17 +49,14 @@ export default function QuoteAnimation({ onNavigate }: Props) {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
     QUOTES.forEach((_, i) => {
-      // Appear
       timers.push(setTimeout(() => {
         setVisible(v => [...v, i]);
       }, i * INTERVAL));
 
-      // Start fade-out
       timers.push(setTimeout(() => {
         setFading(f => new Set([...f, i]));
       }, i * INTERVAL + FADE_IN + HOLD));
 
-      // Remove from DOM
       timers.push(setTimeout(() => {
         setVisible(v => v.filter(q => q !== i));
         setFading(f => { const s = new Set(f); s.delete(i); return s; });
@@ -70,15 +67,15 @@ export default function QuoteAnimation({ onNavigate }: Props) {
     const punchlineAt = (QUOTES.length - 1) * INTERVAL + FADE_IN + HOLD;
     timers.push(setTimeout(() => setShowPunchline(true), punchlineAt));
 
-    // After 2 s centred → move up
+    // After 2 s centred → slide up
     const moveAt = punchlineAt + 2000;
     timers.push(setTimeout(() => setPunchlineMoved(true), moveAt));
 
-    // Menu items appear one-by-one after the move transition settles (400 ms)
+    // Menu items appear one-by-one after slide settles (500ms transition + small buffer)
     MENU_ITEMS.forEach((_, i) => {
       timers.push(setTimeout(() => {
         setVisibleItems(v => [...v, i]);
-      }, moveAt + 450 + i * 220));
+      }, moveAt + 550 + i * 300));   // 300ms between each item (was 220ms)
     });
 
     return () => timers.forEach(clearTimeout);
@@ -90,7 +87,6 @@ export default function QuoteAnimation({ onNavigate }: Props) {
 
   return (
     <div className="qa">
-      {/* Floating quotes */}
       {visible.map(i => (
         <span
           key={i}
@@ -101,7 +97,6 @@ export default function QuoteAnimation({ onNavigate }: Props) {
         </span>
       ))}
 
-      {/* Punchline + menu — single block that slides up */}
       {showPunchline && (
         <div className={`qa__end${punchlineMoved ? " qa__end--moved" : ""}`}>
           <div className="qa__punchline">
