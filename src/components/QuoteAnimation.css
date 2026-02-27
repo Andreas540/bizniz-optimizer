@@ -24,18 +24,23 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  /* Size to content — no fixed width */
+  width: fit-content;
+  /* Never wider than the shell minus 24px each side */
+  max-width: calc(100% - 48px);
 }
 
-/* Left-anchored: 24px from left edge */
+/* Left-anchored: grows rightward from left edge */
 .qa__quote--left {
   left: 24px;
-  max-width: calc(50% - 16px);
 }
 
-/* Right-anchored: starts at 50%+8px, 24px from right edge */
+/* Right-anchored: grows leftward from right edge */
 .qa__quote--right {
-  left: calc(50% + 8px);
-  max-width: calc(50% - 32px);
+  right: 24px;
+  border-left: none;
+  border-right: 2px solid var(--line);
+  text-align: right;
 }
 
 .qa__line {
@@ -76,7 +81,6 @@
   opacity: 0;
 }
 
-/* Blinking cursor */
 .qa__cursor {
   display: inline-block;
   opacity: 1;
