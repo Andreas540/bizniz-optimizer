@@ -6,12 +6,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 20px;
+  /* Top padding clears the fixed header, sides match shell margins */
+  padding: calc(var(--header-h) + 12px) 20px 24px;
 }
 
 .vmodal {
-  height: min(85dvh, 700px);
-  width: min(calc(min(85dvh, 700px) * 0.619), calc(100vw - 40px));
+  height: min(calc(100dvh - var(--header-h) - 36px), 700px);
+  width: min(calc((min(calc(100dvh - var(--header-h) - 36px), 700px)) * 0.619), calc(100vw - 40px));
   background: rgba(15, 25, 40, 0.97);
   border: 2px solid var(--line);
   border-radius: 16px;

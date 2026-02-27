@@ -9,7 +9,7 @@
 
 * { box-sizing: border-box; }
 
-html, body {
+html, body, #root {
   margin: 0;
   height: 100%;
   overflow: hidden;
@@ -47,21 +47,33 @@ body {
     );
 }
 
-.shell {
-  width: min(var(--site-w), 100vw);
-  margin: 0 auto;
-  /* Push content below the fixed header */
-  padding-top: var(--header-h);
+/* Centers the shell horizontally on desktop */
+.page {
   height: 100%;
-  overflow-x: clip;
+  display: flex;
+  justify-content: center;
+}
+
+/* The mobile-width canvas */
+.shell {
+  position: relative;
+  width: min(var(--site-w), 100vw);
+  height: 100%;
+  overflow: hidden;
   box-shadow: 0 0 0 1px rgba(11,74,99,0.15), 0 8px 40px rgba(0,0,0,0.10);
 }
 
+/*
+  Main is absolutely positioned to fill exactly the space
+  below the header — no padding-top needed, no gap.
+*/
 .main {
-  width: 100%;
-  height: calc(100dvh - var(--header-h));
+  position: absolute;
+  top: var(--header-h);
+  left: 0;
+  right: 0;
+  bottom: 0;
   overflow: hidden;
-  position: relative;
 }
 
 .section {
