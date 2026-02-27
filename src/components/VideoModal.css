@@ -1,4 +1,3 @@
-/* Full viewport backdrop */
 .vmodal-backdrop {
   position: fixed;
   inset: 0;
@@ -7,18 +6,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: calc(var(--header-h) + 12px) 20px 24px;
+  padding: 24px 20px;
 }
 
-/*
-  Modal is portrait-shaped to match 594x960 video.
-  Max height leaves breathing room from screen edges.
-  Width is derived from the aspect ratio automatically.
-*/
 .vmodal {
-  /* Height drives the size — width follows from aspect ratio */
   height: min(85dvh, 700px);
-  /* 594:960 = ~0.619 — width = height * ratio */
   width: min(calc(min(85dvh, 700px) * 0.619), calc(100vw - 40px));
   background: rgba(15, 25, 40, 0.97);
   border: 2px solid var(--line);
@@ -29,7 +21,6 @@
   box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
 
-/* Header bar */
 .vmodal__header {
   display: flex;
   align-items: center;
@@ -57,11 +48,8 @@
   transition: color 160ms ease;
 }
 
-.vmodal__close:hover {
-  color: #fff;
-}
+.vmodal__close:hover { color: #fff; }
 
-/* Video fills remaining height */
 .vmodal__video-wrap {
   flex: 1;
   min-height: 0;

@@ -1,7 +1,12 @@
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  /* Center it exactly like the shell */
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(520px, 100vw);
   z-index: 50;
+
   height: var(--header-h);
   display: flex;
   align-items: center;

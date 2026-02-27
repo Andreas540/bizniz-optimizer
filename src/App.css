@@ -12,7 +12,6 @@
 html, body {
   margin: 0;
   height: 100%;
-  /* Prevent page-level scroll — all motion is JS-driven */
   overflow: hidden;
 }
 
@@ -51,11 +50,13 @@ body {
 .shell {
   width: min(var(--site-w), 100vw);
   margin: 0 auto;
+  /* Push content below the fixed header */
+  padding-top: var(--header-h);
+  height: 100%;
   overflow-x: clip;
   box-shadow: 0 0 0 1px rgba(11,74,99,0.15), 0 8px 40px rgba(0,0,0,0.10);
 }
 
-/* Main is exactly the viewport minus the sticky header */
 .main {
   width: 100%;
   height: calc(100dvh - var(--header-h));
@@ -63,7 +64,6 @@ body {
   position: relative;
 }
 
-/* Sections stacked via JS translateY */
 .section {
   position: absolute;
   top: 0;
