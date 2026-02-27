@@ -6,13 +6,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Top padding clears the fixed header, sides match shell margins */
-  padding: calc(var(--header-h) + 12px) 20px 24px;
+  /* Even padding all around — modal is centered in full viewport */
+  padding: 20px;
 }
 
+/*
+  Portrait modal for 594x960 video.
+  Max height leaves room for header + padding on all sides.
+  Width follows from the aspect ratio.
+*/
 .vmodal {
-  height: min(calc(100dvh - var(--header-h) - 36px), 700px);
-  width: min(calc((min(calc(100dvh - var(--header-h) - 36px), 700px)) * 0.619), calc(100vw - 40px));
+  height: min(calc(100dvh - var(--header-h) - 40px), 680px);
+  width: min(
+    calc(min(calc(100dvh - var(--header-h) - 40px), 680px) * 0.619),
+    calc(100vw - 40px)
+  );
+  /* Push the modal below the header */
+  margin-top: var(--header-h);
   background: rgba(15, 25, 40, 0.97);
   border: 2px solid var(--line);
   border-radius: 16px;
