@@ -4,15 +4,22 @@
   background: rgba(0, 0, 0, 0.75);
   z-index: 200;
   display: flex;
+  /* Anchor modal to the top so padding-top controls exactly where it starts */
   align-items: flex-start;
   justify-content: center;
-  padding: calc(var(--header-h) + 8px) 20px 20px;
+  /* Start 8px below the header (including iPhone safe area) */
+  padding-top: calc(var(--header-total) + 8px);
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 16px;
 }
 
 .vmodal {
-  height: min(calc(100dvh - var(--header-h) - 28px), 680px);
+  /* Available height = viewport - header - top gap - bottom gap */
+  height: min(calc(100dvh - var(--header-total) - 24px), 680px);
+  /* Portrait aspect ratio 594:960 ≈ 0.619 */
   width: min(
-    calc(min(calc(100dvh - var(--header-h) - 28px), 680px) * 0.619),
+    calc(min(calc(100dvh - var(--header-total) - 24px), 680px) * 0.619),
     calc(100vw - 40px)
   );
   background: rgba(15, 25, 40, 0.97);
@@ -22,6 +29,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  /* No margin-top — padding-top on backdrop handles positioning */
 }
 
 .vmodal__header {
@@ -50,7 +58,6 @@
   line-height: 1;
   transition: color 160ms ease;
 }
-
 .vmodal__close:hover { color: #fff; }
 
 .vmodal__video-wrap {

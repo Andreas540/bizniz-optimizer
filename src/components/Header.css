@@ -4,11 +4,19 @@
   left: 0;
   right: 0;
   z-index: 50;
-  height: var(--header-h);
+
+  /* Safe area pushes content down inside the header */
+  padding-top: var(--safe-top);
+  /* Height includes the safe area so .main starts below it correctly */
+  height: var(--header-total);
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 10px;
+
   background: rgba(235, 245, 252, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 3px solid var(--line);
@@ -29,9 +37,7 @@
   object-fit: contain;
 }
 
-.header__title {
-  min-width: 0;
-}
+.header__title { min-width: 0; }
 
 .header__line1 {
   font-family: var(--font);
@@ -89,7 +95,11 @@
   transform: translateX(100%);
   transition: transform 220ms ease, visibility 0s linear 220ms;
   z-index: 70;
-  padding: calc(var(--header-h) + 20px) 14px 18px;
+  /* Top padding clears the safe area + header */
+  padding-top: calc(var(--header-total) + 20px);
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-bottom: 18px;
   background: rgba(235, 245, 252, 0.98);
   backdrop-filter: blur(10px);
   border-left: 3px solid var(--line);
