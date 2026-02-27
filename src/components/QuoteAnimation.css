@@ -9,57 +9,97 @@
 /* ── Floating quotes ────────────────────────────────────── */
 .qa__quote {
   position: absolute;
-  max-width: 175px;
   font-family: var(--font);
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 500;
   color: var(--ink);
   line-height: 1.4;
   opacity: 0;
-  animation: qa-in 0.6s ease forwards;
+  animation: qa-in 0.4s ease forwards;
   pointer-events: none;
   background: rgba(255, 255, 255, 0.45);
-  padding: 5px 9px;
+  padding: 7px 11px;
   border-radius: 6px;
   border-left: 2px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Left-anchored: 24px from left edge */
+.qa__quote--left {
+  left: 24px;
+  max-width: calc(50% - 16px);
+}
+
+/* Right-anchored: starts at 50%+8px, 24px from right edge */
+.qa__quote--right {
+  left: calc(50% + 8px);
+  max-width: calc(50% - 32px);
+}
+
+.qa__line {
+  display: block;
 }
 
 .qa__quote--out {
-  animation: qa-out 0.7s ease forwards;
+  animation: qa-out 0.4s ease forwards;
 }
 
 @keyframes qa-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0);   }
 }
 
 @keyframes qa-out {
   from { opacity: 1; transform: translateY(0);    }
-  to   { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 0; transform: translateY(-6px); }
 }
 
-/* ── End block ──────────────────────────────────────────────
-   top: 0 is FIXED — never changes.
-   Only transform is transitioned → 100% GPU, no layout cost.
+/* ── Typewriter ─────────────────────────────────────────── */
+.qa__typewriter {
+  position: absolute;
+  bottom: 48px;
+  left: 24px;
+  right: 24px;
+  text-align: center;
+  font-family: var(--font);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
 
-   Centred:
-     translateY = (available height / 2) - (own height / 2)
-     available height = 100vh - var(--header-total)
-     own height / 2   = 50%  (% in translateY = own height)
-     → calc((100vh - var(--header-total)) / 2 - 50%)
+.qa__typewriter--out {
+  opacity: 0;
+}
 
-   Moved:
-     translateY = 110px  (comfortable gap below header)        */
+/* Blinking cursor */
+.qa__cursor {
+  display: inline-block;
+  opacity: 1;
+  animation: qa-blink 0.7s step-end infinite;
+  font-weight: 300;
+  margin-left: 1px;
+}
+
+@keyframes qa-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── End block — transform only for GPU compositing ─────── */
 .qa__end {
   position: absolute;
   top: 0;
-  left: 28px;
-  right: 28px;
+  left: 24px;
+  right: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 32px;
-  /* GPU-composited — no layout properties changing */
   will-change: transform;
   transition: transform 900ms cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(calc((100vh - var(--header-total)) / 2 - 50%));
@@ -69,7 +109,7 @@
   transform: translateY(110px);
 }
 
-/* ── Punchline — fade-in animation lives here ───────────── */
+/* ── Punchline ───────────────────────────────────────────── */
 .qa__punchline {
   display: flex;
   flex-direction: column;

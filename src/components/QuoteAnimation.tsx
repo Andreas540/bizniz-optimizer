@@ -1,31 +1,58 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./QuoteAnimation.css";
 
+// ── Content ────────────────────────────────────────────────
 const QUOTES = [
-  "Chasing invoices at midnight?",
-  "Which customer owes you money?",
-  "Is your inventory accurate right now?",
-  "How much did you earn last month?",
-  "Who placed the last order?",
-  "Still managing this in a spreadsheet?",
-  "What if it was all in one place?",
+  "Match your production\nwith customer demand",
+  "Easily create and send\ninvoices from your phone",
+  "Set the right price",
+  "Keep track of\nproductivity",
+  "Prioritize your best\ncustomers",
+  "Be a trusted business\npartner",
+  "When can you deliver?\nDid they really pay?",
 ];
 
-const POSITIONS: { x: number; y: number }[] = [
-  { x: 8,  y: 10 },
-  { x: 50, y: 6  },
-  { x: 5,  y: 48 },
-  { x: 46, y: 40 },
-  { x: 14, y: 70 },
-  { x: 52, y: 64 },
-  { x: 24, y: 28 },
+const TYPEWRITER_TEXT = "Always know the answer.";
+
+// left = left-anchored (24px from left edge)
+// right = right-anchored (starts at 50% + 8px, respects 24px right margin)
+const POSITIONS: { side: "left" | "right"; top: number }[] = [
+  { side: "left",  top: 12 },
+  { side: "right", top: 27 },
+  { side: "left",  top: 42 },
+  { side: "right", top: 54 },
+  { side: "left",  top: 64 },
+  { side: "right", top: 74 },
+  { side: "left",  top: 84 },
 ];
 
-const FADE_IN   = 600;
-const HOLD      = 2400;
-const FADE_OUT  = 700;
-const QUOTE_DUR = FADE_IN + HOLD + FADE_OUT;
-const INTERVAL  = 1700;
+// ── Timing constants ───────────────────────────────────────
+const FADE_MS        = 400;   // fade in / fade out duration
+const SOLO_MS        = 2000;  // Q1 alone before Q2 enters
+const STEP_MS        = 2000;  // new quote every 2 s → each quote lives 4 s total
+const TW_CHAR_MS     = 45;    // ms per typewriter character — fast
+const TW_SOLO_MS     = 800;   // pause after typewriter finishes before punchline
+
+// Derived
+// Q[i] appears at: i === 0 ? 0 : SOLO_MS + (i - 1) * STEP_MS
+const quoteStart = (i: number) =>
+  i === 0 ? 0 : SOLO_MS + (i - 1) * STEP_MS;
+
+// Q[i] starts fading at: start + 4000 - FADE_MS
+const quoteFadeStart = (i: number) => quoteStart(i) + 2 * STEP_MS - FADE_MS;
+
+// Q[i] fully gone at: start + 4000
+const quoteEnd = (i: number) => quoteStart(i) + 2 * STEP_MS;
+
+// Typewriter begins when last quote has faded
+const TW_START = quoteEnd(QUOTES.length - 1);
+
+// Punchline appears after typewriter finishes + pause
+const PUNCHLINE_AT = TW_START + TYPEWRITER_TEXT.length * TW_CHAR_MS + TW_SOLO_MS;
+
+interface Props {
+  onNavigate?: (id: string) => void;
+}
 
 const MENU_ITEMS = [
   { label: "Previews",    id: null      },
@@ -34,56 +61,75 @@ const MENU_ITEMS = [
   { label: "Q&A",         id: null      },
 ];
 
-interface Props {
-  onNavigate?: (id: string) => void;
-}
-
 export default function QuoteAnimation({ onNavigate }: Props) {
-  const [visible, setVisible]               = useState<number[]>([]);
-  const [fading, setFading]                 = useState<Set<number>>(new Set());
+  const [activeQuotes, setActiveQuotes] = useState<Set<number>>(new Set());
+  const [fadingQuotes, setFadingQuotes] = useState<Set<number>>(new Set());
+  const [twChars, setTwChars]           = useState(0);
+  const [twFading, setTwFading]         = useState(false);
   const [showPunchline, setShowPunchline]   = useState(false);
   const [punchlineMoved, setPunchlineMoved] = useState(false);
   const [showMenu, setShowMenu]             = useState(false);
   const [visibleItems, setVisibleItems]     = useState<number[]>([]);
+  const twInterval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = [];
 
+    // Schedule each quote
     QUOTES.forEach((_, i) => {
+      // Appear
       timers.push(setTimeout(() => {
-        setVisible(v => [...v, i]);
-      }, i * INTERVAL));
+        setActiveQuotes(s => new Set([...s, i]));
+      }, quoteStart(i)));
 
+      // Start fading
       timers.push(setTimeout(() => {
-        setFading(f => new Set([...f, i]));
-      }, i * INTERVAL + FADE_IN + HOLD));
+        setFadingQuotes(s => new Set([...s, i]));
+      }, quoteFadeStart(i)));
 
+      // Remove
       timers.push(setTimeout(() => {
-        setVisible(v => v.filter(q => q !== i));
-        setFading(f => { const s = new Set(f); s.delete(i); return s; });
-      }, i * INTERVAL + QUOTE_DUR));
+        setActiveQuotes(s => { const n = new Set(s); n.delete(i); return n; });
+        setFadingQuotes(s => { const n = new Set(s); n.delete(i); return n; });
+      }, quoteEnd(i)));
     });
 
-    // Punchline fades in — truly centred (nav not in DOM yet)
-    const punchlineAt = (QUOTES.length - 1) * INTERVAL + FADE_IN + HOLD;
-    timers.push(setTimeout(() => setShowPunchline(true), punchlineAt));
+    // Typewriter — tick character by character
+    timers.push(setTimeout(() => {
+      let count = 0;
+      twInterval.current = setInterval(() => {
+        count++;
+        setTwChars(count);
+        if (count >= TYPEWRITER_TEXT.length) {
+          clearInterval(twInterval.current!);
+        }
+      }, TW_CHAR_MS);
+    }, TW_START));
 
-    // After 2 s centred → start sliding up
-    const moveAt = punchlineAt + 2000;
+    // Fade typewriter out just before punchline
+    timers.push(setTimeout(() => setTwFading(true), PUNCHLINE_AT - 500));
+
+    // Punchline
+    timers.push(setTimeout(() => setShowPunchline(true), PUNCHLINE_AT));
+
+    // Slide up
+    const moveAt = PUNCHLINE_AT + 2000;
     timers.push(setTimeout(() => setPunchlineMoved(true), moveAt));
 
-    // Mount the nav roughly halfway through the slide (450ms in)
-    // so it appears to grow in naturally as the block settles
+    // Mount menu after slide fully completes
     timers.push(setTimeout(() => setShowMenu(true), moveAt + 920));
 
-    // Menu items appear one-by-one after nav is mounted
+    // Stagger menu items
     MENU_ITEMS.forEach((_, i) => {
       timers.push(setTimeout(() => {
         setVisibleItems(v => [...v, i]);
       }, moveAt + 970 + i * 300));
     });
 
-    return () => timers.forEach(clearTimeout);
+    return () => {
+      timers.forEach(clearTimeout);
+      if (twInterval.current) clearInterval(twInterval.current);
+    };
   }, []);
 
   const handleClick = (id: string | null) => {
@@ -92,16 +138,31 @@ export default function QuoteAnimation({ onNavigate }: Props) {
 
   return (
     <div className="qa">
-      {visible.map(i => (
+
+      {/* Floating quotes */}
+      {[...activeQuotes].map(i => (
         <span
           key={i}
-          className={`qa__quote${fading.has(i) ? " qa__quote--out" : ""}`}
-          style={{ left: `${POSITIONS[i].x}%`, top: `${POSITIONS[i].y}%` }}
+          className={`qa__quote qa__quote--${POSITIONS[i].side}${fadingQuotes.has(i) ? " qa__quote--out" : ""}`}
+          style={{ top: `${POSITIONS[i].top}%` }}
         >
-          {QUOTES[i]}
+          {QUOTES[i].split("\n").map((line, j) => (
+            <span key={j} className="qa__line">{line}</span>
+          ))}
         </span>
       ))}
 
+      {/* Typewriter */}
+      {twChars > 0 && (
+        <span className={`qa__typewriter${twFading ? " qa__typewriter--out" : ""}`}>
+          {TYPEWRITER_TEXT.slice(0, twChars)}
+          {twChars < TYPEWRITER_TEXT.length && (
+            <span className="qa__cursor">|</span>
+          )}
+        </span>
+      )}
+
+      {/* Punchline + menu */}
       {showPunchline && (
         <div className={`qa__end${punchlineMoved ? " qa__end--moved" : ""}`}>
           <div className="qa__punchline">
@@ -109,7 +170,6 @@ export default function QuoteAnimation({ onNavigate }: Props) {
             <span className="qa__punchline-sub">Meet the Bizniz Optimizer.</span>
           </div>
 
-          {/* Nav only mounted after move starts — keeps centering accurate */}
           {showMenu && (
             <nav className="qa__menu">
               {MENU_ITEMS.map((item, i) => (
