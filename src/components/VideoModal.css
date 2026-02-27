@@ -1,6 +1,6 @@
 .vmodal-backdrop {
   position: fixed;
-  top: var(--header-total);  /* starts exactly at header bottom */
+  top: var(--header-total);
   left: 0;
   right: 0;
   bottom: 0;
@@ -13,10 +13,11 @@
 }
 
 .vmodal {
-  height: min(calc(100% - 24px), 680px);
+  /* Explicit dvh calculation — no variable dependencies */
+  height: min(calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px) - 24px), 680px);
   width: min(
-    calc(min(calc(100% - 24px), 680px) * 0.619),
-    calc(100% - 40px)
+    calc(min(calc(100dvh - var(--header-h) - env(safe-area-inset-top, 0px) - 24px), 680px) * 0.619),
+    calc(100vw - 40px)
   );
   background: rgba(15, 25, 40, 0.97);
   border: 2px solid var(--line);
