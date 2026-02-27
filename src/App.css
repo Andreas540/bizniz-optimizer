@@ -60,7 +60,7 @@ body {
   height: calc(100dvh - var(--header-h));
   overflow-y: scroll;
   /* Snap container */
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y proximity;
   -webkit-overflow-scrolling: touch;
   padding: 0;
 }
