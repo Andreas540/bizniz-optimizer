@@ -1,0 +1,77 @@
+/* ── Container ──────────────────────────────────────────── */
+.qa {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Individual quotes ──────────────────────────────────── */
+.qa__quote {
+  position: absolute;
+  max-width: 175px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.4;
+  opacity: 0;
+  animation: qa-in 0.6s ease forwards;
+  pointer-events: none;
+  /* Subtle highlight to lift text off the gradient background */
+  background: rgba(255, 255, 255, 0.45);
+  padding: 5px 9px;
+  border-radius: 6px;
+  border-left: 2px solid var(--line);
+}
+
+.qa__quote--out {
+  animation: qa-out 0.7s ease forwards;
+}
+
+@keyframes qa-in {
+  from { opacity: 0; transform: translateY(8px);  }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+@keyframes qa-out {
+  from { opacity: 1; transform: translateY(0);     }
+  to   { opacity: 0; transform: translateY(-8px);  }
+}
+
+/* ── Punchline ───────────────────────────────────────────── */
+.qa__punchline {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 0 28px;
+  animation: qa-punchline-in 1.1s ease forwards;
+}
+
+@keyframes qa-punchline-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+.qa__punchline-main {
+  display: block;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--line);
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+.qa__punchline-sub {
+  display: block;
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  opacity: 0.72;
+  line-height: 1.35;
+}

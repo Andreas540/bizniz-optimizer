@@ -1,6 +1,7 @@
 import { useMemo, useRef, useEffect, useCallback } from "react";
 import Header from "./components/Header";
-import VideoHero from "./components/VideoHero";
+// import VideoHero from "./components/VideoHero";   // kept for later use
+import QuoteAnimation from "./components/QuoteAnimation";
 import ContactSection from "./components/ContactSection";
 import PricingSection from "./components/PricingSection";
 import "./App.css";
@@ -116,16 +117,17 @@ export default function App() {
         />
 
         <main className="main" ref={mainRef}>
-          <section ref={setSectionRef("intro")} id="intro" className="section section--hero">
-            <VideoHero
-              items={[
-                { title: "Register customers", src: "/videos/register-customers.mp4" },
-                { title: "Register products",  src: "/videos/register-products.mp4" },
-                { title: "Register orders",    src: "/videos/register-orders.mp4" },
-                { title: "Register payments",  src: "/videos/register-payments.mp4" },
-              ]}
-            />
-          </section>
+          <section ref={setSectionRef("intro")} id="intro" className="section">
+  {/* <VideoHero
+    items={[
+      { title: "Register customers", src: "/videos/register-customers.mp4" },
+      { title: "Register products",  src: "/videos/register-products.mp4" },
+      { title: "Register orders",    src: "/videos/register-orders.mp4" },
+      { title: "Register payments",  src: "/videos/register-payments.mp4" },
+    ]}
+  /> */}
+  <QuoteAnimation />
+</section>
 
           <section ref={setSectionRef("contact")} id="contact" className="section">
             <ContactSection />
