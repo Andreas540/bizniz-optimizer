@@ -19,8 +19,7 @@ type Module = {
 const MODULES: Module[] = [
   {
     id: "sales",
-    name: "Sales & Cash Flow",
-    tag: { text: "- Required", color: "green" },
+    name: "Sales & Cash Flow",    
     features: [
       { label: "Dashboard" },
       { label: "Customers",     hasPreview: true, videoSrc: "/videos/register-customers.mp4", videoTitle: "Customers" },
@@ -62,8 +61,7 @@ const MODULES: Module[] = [
   },
   {
     id: "admin",
-    name: "Admin",
-    tag: { text: "- Free", color: "green" },
+    name: "Admin",    
     features: [
       { label: "User Admin" },
       { label: "Settings" },
