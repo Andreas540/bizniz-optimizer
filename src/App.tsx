@@ -4,10 +4,11 @@ import QuoteAnimation from "./components/QuoteAnimation";
 import PreviewSection from "./components/PreviewSection";
 import ContactSection from "./components/ContactSection";
 import PricingSection from "./components/PricingSection";
+import QASection from "./components/QASection";
 import "./App.css";
 
-type SectionId = "intro" | "previews" | "contact" | "pricing" | "making";
-const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "making"];
+type SectionId = "intro" | "previews" | "contact" | "pricing" | "qa" | "making";
+const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "qa", "making"];
 
 export default function App() {
   const links = useMemo(
@@ -16,6 +17,7 @@ export default function App() {
       { id: "previews", label: "Previews" },
       { id: "contact",  label: "Contact us!" },
       { id: "pricing",  label: "Pricing" },
+      { id: "qa",       label: "Q&A" },
       { id: "making",   label: "In the making" },
     ],
     []
@@ -26,7 +28,7 @@ export default function App() {
   const mainRef = useRef<HTMLElement | null>(null);
 
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
-    intro: null, previews: null, contact: null, pricing: null, making: null,
+    intro: null, previews: null, contact: null, pricing: null, qa: null, making: null,
   });
 
   const applyTransforms = useCallback((idx: number) => {
@@ -118,7 +120,7 @@ export default function App() {
         />
 
         <main className="main" ref={mainRef}>
-          <section ref={setSectionRef("intro")} id="intro" className="section">        
+          <section ref={setSectionRef("intro")} id="intro" className="section">
             <QuoteAnimation onNavigate={scrollToSection} />
           </section>
 
@@ -132,6 +134,10 @@ export default function App() {
 
           <section ref={setSectionRef("pricing")} id="pricing" className="section">
             <PricingSection />
+          </section>
+
+          <section ref={setSectionRef("qa")} id="qa" className="section">
+            <QASection />
           </section>
 
           <section ref={setSectionRef("making")} id="making" className="section">
