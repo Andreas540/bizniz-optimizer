@@ -1,21 +1,22 @@
 import { useMemo, useRef, useEffect, useCallback } from "react";
 import Header from "./components/Header";
-// import VideoHero from "./components/VideoHero";   // kept for later use
 import QuoteAnimation from "./components/QuoteAnimation";
+import PreviewSection from "./components/PreviewSection";
 import ContactSection from "./components/ContactSection";
 import PricingSection from "./components/PricingSection";
 import "./App.css";
 
-type SectionId = "intro" | "contact" | "pricing" | "making";
-const SECTION_IDS: SectionId[] = ["intro", "contact", "pricing", "making"];
+type SectionId = "intro" | "previews" | "contact" | "pricing" | "making";
+const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "making"];
 
 export default function App() {
   const links = useMemo(
     () => [
-      { id: "intro",   label: "Introduction videos" },
-      { id: "contact", label: "Contact us!" },
-      { id: "pricing", label: "Pricing" },
-      { id: "making",  label: "In the making" },
+      { id: "intro",    label: "Introduction" },
+      { id: "previews", label: "Previews" },
+      { id: "contact",  label: "Contact us!" },
+      { id: "pricing",  label: "Pricing" },
+      { id: "making",   label: "In the making" },
     ],
     []
   );
@@ -25,7 +26,7 @@ export default function App() {
   const mainRef = useRef<HTMLElement | null>(null);
 
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
-    intro: null, contact: null, pricing: null, making: null,
+    intro: null, previews: null, contact: null, pricing: null, making: null,
   });
 
   const applyTransforms = useCallback((idx: number) => {
@@ -117,17 +118,13 @@ export default function App() {
         />
 
         <main className="main" ref={mainRef}>
-          <section ref={setSectionRef("intro")} id="intro" className="section">
-  {/* <VideoHero
-    items={[
-      { title: "Register customers", src: "/videos/register-customers.mp4" },
-      { title: "Register products",  src: "/videos/register-products.mp4" },
-      { title: "Register orders",    src: "/videos/register-orders.mp4" },
-      { title: "Register payments",  src: "/videos/register-payments.mp4" },
-    ]}
-  /> */}
-  <QuoteAnimation onNavigate={scrollToSection} />   {/* ← just add the prop here */}
-</section>
+          <section ref={setSectionRef("intro")} id="intro" className="section">        
+            <QuoteAnimation onNavigate={scrollToSection} />
+          </section>
+
+          <section ref={setSectionRef("previews")} id="previews" className="section">
+            <PreviewSection />
+          </section>
 
           <section ref={setSectionRef("contact")} id="contact" className="section">
             <ContactSection />
