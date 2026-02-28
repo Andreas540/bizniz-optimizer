@@ -211,7 +211,7 @@
 /* ── Skip button ─────────────────────────────────────────── */
 .qa__skip {
   position: absolute;
-  bottom: 16px;
+  bottom: 36px;
   right: 20px;
   font-family: var(--font);
   font-size: 13px;
@@ -234,7 +234,7 @@
 /* ── Refresh button ──────────────────────────────────────── */
 .qa__refresh {
   position: absolute;
-  bottom: 12px;
+  bottom: 34px;
   right: 16px;
   width: 32px;
   height: 32px;
