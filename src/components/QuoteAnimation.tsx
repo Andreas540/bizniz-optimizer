@@ -41,7 +41,7 @@ const TW_START    = quoteEnd(QUOTES.length - 1);
 const PUNCHLINE_AT = TW_START + TYPEWRITER_TEXT.length * TW_CHAR_MS + TW_SOLO_MS;
 
 const MENU_ITEMS = [
-  { label: "Previews",    id: null      },
+  { label: "Previews",    id: "previews"},
   { label: "Contact us!", id: "contact" },
   { label: "Pricing",     id: "pricing" },
   { label: "Q&A",         id: null      },
