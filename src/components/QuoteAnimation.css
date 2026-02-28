@@ -207,3 +207,54 @@
 .qa__menu-item--dead .qa__menu-label {
   opacity: 0.7;
 }
+
+/* ── Skip button ─────────────────────────────────────────── */
+.qa__skip {
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(10, 10, 10, 0.45);
+  background: none;
+  border: none;
+  padding: 4px 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(10, 10, 10, 0.2);
+}
+
+.qa__skip:hover {
+  color: var(--ink);
+  text-decoration-color: var(--ink);
+}
+
+/* ── Refresh button ──────────────────────────────────────── */
+.qa__refresh {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: rgba(10, 10, 10, 0.35);
+  animation: qa-in 0.4s ease forwards;
+  opacity: 0;
+}
+
+.qa__refresh:hover {
+  color: var(--line);
+}
+
+.qa__refresh svg {
+  width: 20px;
+  height: 20px;
+}
