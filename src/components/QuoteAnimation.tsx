@@ -40,7 +40,7 @@ const MENU_ITEMS = [
   { label: "Previews",    id: "previews" },
   { label: "Contact us!", id: "contact"  },
   { label: "Pricing",     id: "pricing"  },
-  { label: "Q&A",         id: "pricing"  },
+  { label: "Q&A",         id: "Q&A"  },
 ];
 
 interface Props {
