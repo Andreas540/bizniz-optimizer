@@ -45,7 +45,7 @@
     .form-title { font-size: 16px; font-weight: 700; color: var(--ink); }
     .form-desc { font-size: 13px; color: var(--ink); opacity: 0.7; line-height: 1.5; margin-top: -8px; }
     .field { display: flex; flex-direction: column; gap: 5px; }
-    label { font-size: 13px; font-weight: 600; color: var(--ink); }
+    .field-label { font-size: 13px; font-weight: 600; color: var(--ink); }
     input[type="text"], input[type="email"] { font-family: var(--font); font-size: 15px; color: var(--ink); background: rgba(255,255,255,0.7); border: 1.5px solid rgba(11,74,99,0.3); border-radius: 8px; padding: 10px 12px; width: 100%; outline: none; transition: border-color 0.2s ease; }
     input[type="text"]:focus, input[type="email"]:focus { border-color: var(--line); }
     .users-section { display: flex; flex-direction: column; gap: 12px; }
@@ -57,14 +57,15 @@
     .user-modules { display: flex; flex-direction: column; gap: 6px; }
     .user-modules-label { font-size: 12px; font-weight: 600; color: var(--ink); opacity: 0.6; }
     .module-checks { display: flex; flex-wrap: wrap; gap: 6px; }
-    .module-check-item { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.6); border: 1px solid rgba(11,74,99,0.15); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
-    .module-check-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--line); cursor: pointer; flex-shrink: 0; margin: 0; padding: 0; border: none; background: none; }
+    .module-check-item { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.6); border: 1px solid rgba(11,74,99,0.15); border-radius: 6px; padding: 5px 10px; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
+    .module-check-item:has(input:checked) { background: rgba(11,74,99,0.08); border-color: rgba(11,74,99,0.35); }
+    .module-check-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--line); cursor: pointer; flex-shrink: 0; margin: 0; padding: 0; }
     .module-check-item span { font-size: 13px; color: var(--ink); line-height: 1.2; }
     .submit-btn { font-family: var(--font); font-size: 16px; font-weight: 700; color: #fff; background: var(--line); border: none; border-radius: 8px; padding: 14px 32px; cursor: pointer; width: 100%; transition: opacity 160ms ease, transform 100ms ease; }
     .submit-btn:hover { opacity: 0.88; }
     .submit-btn:active { transform: scale(0.97); }
     .submit-btn:disabled { opacity: 0.5; cursor: default; }
-    .submit-error { font-size: 13px; color: #c62828; text-align: center; }
+    .submit-error { font-size: 13px; color: #c62828; text-align: center; line-height: 1.5; }
     .confirmation { background: rgba(255,255,255,0.55); border: 1.5px solid rgba(11,74,99,0.25); border-radius: 12px; padding: 24px 16px; text-align: center; display: none; }
     .confirmation.visible { display: block; }
     .confirmation-title { font-size: 18px; font-weight: 700; color: var(--line); margin-bottom: 8px; }
@@ -82,8 +83,8 @@
     </div>
     <div class="content">
       <div class="success-banner">
-        <div class="success-title">Payment confirmed!</div>
-        <div class="success-sub">Thank you for your purchase. Please fill in the details below so we can set up your account.</div>
+        <div class="success-title">Thank you for your purchase!</div>
+        <div class="success-sub">Please fill in the details below so we can set up your account.</div>
       </div>
       <div class="summary">
         <div class="summary-title">Your order</div>
@@ -94,7 +95,7 @@
         <div class="form-title">Account setup</div>
         <div class="form-desc">We'll use this information to create your account. Login credentials are emailed to all users once the account is set up.</div>
         <div class="field">
-          <label for="company">Company name</label>
+          <div class="field-label">Company name</div>
           <input type="text" id="company" placeholder="Your company name" autocomplete="organization" />
         </div>
         <div class="users-section">
@@ -150,17 +151,21 @@
       const maxUsers = Math.max(...orderModules.map(m => m.users));
       let html = '';
       for (let u = 1; u <= maxUsers; u++) {
-        const availableModules = orderModules.filter(m => m.users >= u);
-        const checksHTML = availableModules.map(m => `
-          <label class="module-check-item">
-            <input type="checkbox" name="user-${u}-module" value="${m.id}" checked />
-            <span>${m.name}</span>
-          </label>`).join('');
+        const checksHTML = orderModules.map(m => {
+          // Only pre-check modules where all users have access (module.users === maxUsers)
+          // Modules with fewer licenses are left unchecked for manual assignment
+          const preChecked = m.users === maxUsers ? 'checked' : '';
+          return `
+            <label class="module-check-item">
+              <input type="checkbox" name="user-${u}-module" value="${m.id}" ${preChecked} />
+              <span>${m.name}</span>
+            </label>`;
+        }).join('');
         html += `
           <div class="user-row">
             <div class="user-row-label">User ${u}</div>
             <div class="user-row-fields">
-              <input type="text" id="user-name-${u}" placeholder="Full name" />
+              <input type="text"  id="user-name-${u}"  placeholder="Full name" />
               <input type="email" id="user-email-${u}" placeholder="Email" />
             </div>
             <div class="user-modules">
@@ -172,18 +177,43 @@
       container.innerHTML = html;
     }
 
+    function validateModuleAssignments() {
+      const maxUsers = Math.max(...orderModules.map(m => m.users));
+      const errors = [];
+      for (const mod of orderModules) {
+        let checkedCount = 0;
+        for (let u = 1; u <= maxUsers; u++) {
+          const cb = document.querySelector(`input[name="user-${u}-module"][value="${mod.id}"]`);
+          if (cb && cb.checked) checkedCount++;
+        }
+        if (checkedCount > mod.users) {
+          errors.push(`You only have ${mod.users} slot${mod.users > 1 ? 's' : ''} for "${mod.name}" but assigned ${checkedCount}.`);
+        } else if (checkedCount < mod.users) {
+          const missing = mod.users - checkedCount;
+          errors.push(`Please assign "${mod.name}" to ${missing} more user${missing > 1 ? 's' : ''}.`);
+        }
+      }
+      return errors;
+    }
+
     async function handleSubmit() {
       const btn = document.getElementById('submit-btn');
       const errorEl = document.getElementById('submit-error');
-      const company = document.getElementById('company').value.trim();
       errorEl.style.display = 'none';
+      const company = document.getElementById('company').value.trim();
       if (!company) { errorEl.textContent = 'Please enter your company name.'; errorEl.style.display = 'block'; return; }
       const maxUsers = Math.max(...orderModules.map(m => m.users), 1);
-      const users = [];
       for (let u = 1; u <= maxUsers; u++) {
-        const name = document.getElementById(`user-name-${u}`)?.value.trim();
+        const name  = document.getElementById(`user-name-${u}`)?.value.trim();
         const email = document.getElementById(`user-email-${u}`)?.value.trim();
         if (!name || !email) { errorEl.textContent = `Please fill in name and email for User ${u}.`; errorEl.style.display = 'block'; return; }
+      }
+      const moduleErrors = validateModuleAssignments();
+      if (moduleErrors.length > 0) { errorEl.innerHTML = moduleErrors.join('<br/>'); errorEl.style.display = 'block'; return; }
+      const users = [];
+      for (let u = 1; u <= maxUsers; u++) {
+        const name  = document.getElementById(`user-name-${u}`).value.trim();
+        const email = document.getElementById(`user-email-${u}`).value.trim();
         const checkedModules = [...document.querySelectorAll(`input[name="user-${u}-module"]:checked`)]
           .map(cb => { const mod = orderModules.find(m => m.id === cb.value); return mod ? mod.name : cb.value; });
         users.push({ name, email, modules: checkedModules });
