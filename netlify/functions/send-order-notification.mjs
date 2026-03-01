@@ -15,7 +15,7 @@ export default async function handler(req) {
 
     const toEmail = process.env.ORDER_NOTIFICATION_EMAIL;
 
-    // Build modules summary
+    // Modules summary
     const modulesHTML = modules.map(m =>
       `<tr>
         <td style="padding:6px 12px;border-bottom:1px solid #e0eaf0;">${m.name}</td>
@@ -24,19 +24,22 @@ export default async function handler(req) {
       </tr>`
     ).join('');
 
-    // Build users summary
+    // Users with module assignments
     const usersHTML = users.map((u, i) =>
       `<tr>
-        <td style="padding:6px 12px;border-bottom:1px solid #e0eaf0;">User ${i + 1}</td>
-        <td style="padding:6px 12px;border-bottom:1px solid #e0eaf0;">${u.name}</td>
-        <td style="padding:6px 12px;border-bottom:1px solid #e0eaf0;">${u.email}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e0eaf0;vertical-align:top;">User ${i + 1}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e0eaf0;vertical-align:top;">${u.name}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e0eaf0;vertical-align:top;">${u.email}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e0eaf0;vertical-align:top;font-size:12px;color:#0b4a63;">
+          ${(u.modules || []).join('<br/>')}
+        </td>
       </tr>`
     ).join('');
 
     const html = `
       <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;color:#0a0a0a;">
         <div style="background:#0b4a63;padding:20px 24px;border-radius:8px 8px 0 0;">
-          <h1 style="color:#fff;margin:0;font-size:20px;">New Order — Bizniz Optimizer</h1>
+          <h1 style="color:#fff;margin:0;font-size:20px;">Account Setup — Bizniz Optimizer</h1>
         </div>
         <div style="background:#f0f8ff;padding:24px;border-radius:0 0 8px 8px;border:1px solid #c2dff0;">
 
@@ -61,13 +64,14 @@ export default async function handler(req) {
             </tfoot>
           </table>
 
-          <h2 style="font-size:16px;margin:0 0 8px;">Users</h2>
+          <h2 style="font-size:16px;margin:0 0 8px;">Users &amp; module access</h2>
           <table style="width:100%;border-collapse:collapse;margin-bottom:20px;background:#fff;border-radius:6px;overflow:hidden;">
             <thead>
               <tr style="background:#0b4a63;color:#fff;">
                 <th style="padding:8px 12px;text-align:left;">#</th>
                 <th style="padding:8px 12px;text-align:left;">Name</th>
                 <th style="padding:8px 12px;text-align:left;">Email</th>
+                <th style="padding:8px 12px;text-align:left;">Modules</th>
               </tr>
             </thead>
             <tbody>${usersHTML}</tbody>
@@ -83,7 +87,7 @@ export default async function handler(req) {
     await resend.emails.send({
       from: 'orders@biznizoptimizer.com',
       to:   toEmail,
-      subject: `New order: ${company} — $${Number(totalMonthly).toFixed(2)}/mo`,
+      subject: `Account setup received: ${company} — $${Number(totalMonthly).toFixed(2)}/mo`,
       html,
     });
 

@@ -9,7 +9,6 @@
     :root {
       --ink:  #0a0a0a;
       --line: #0b4a63;
-      --panel: rgba(148, 196, 230, 0.52);
       --font: 'Inter', system-ui, -apple-system, sans-serif;
       --site-w: 520px;
     }
@@ -32,7 +31,6 @@
     .header-line2 { font-weight: 700; font-size: 15px; line-height: 1.25; color: var(--line); }
     .content { flex: 1; padding: 28px 16px 40px; display: flex; flex-direction: column; gap: 24px; }
     .success-banner { background: rgba(255,255,255,0.55); border: 1.5px solid rgba(11,74,99,0.25); border-radius: 12px; padding: 18px 16px; text-align: center; }
-    .success-icon { font-size: 36px; margin-bottom: 8px; }
     .success-title { font-size: 20px; font-weight: 700; color: var(--line); margin-bottom: 6px; }
     .success-sub { font-size: 14px; color: var(--ink); opacity: 0.75; line-height: 1.5; }
     .summary { background: rgba(255,255,255,0.45); border: 1.5px solid rgba(11,74,99,0.2); border-radius: 10px; padding: 14px 16px; }
@@ -48,14 +46,20 @@
     .form-desc { font-size: 13px; color: var(--ink); opacity: 0.7; line-height: 1.5; margin-top: -8px; }
     .field { display: flex; flex-direction: column; gap: 5px; }
     label { font-size: 13px; font-weight: 600; color: var(--ink); }
-    input { font-family: var(--font); font-size: 15px; color: var(--ink); background: rgba(255,255,255,0.7); border: 1.5px solid rgba(11,74,99,0.3); border-radius: 8px; padding: 10px 12px; width: 100%; outline: none; transition: border-color 0.2s ease; }
-    input:focus { border-color: var(--line); }
+    input[type="text"], input[type="email"] { font-family: var(--font); font-size: 15px; color: var(--ink); background: rgba(255,255,255,0.7); border: 1.5px solid rgba(11,74,99,0.3); border-radius: 8px; padding: 10px 12px; width: 100%; outline: none; transition: border-color 0.2s ease; }
+    input[type="text"]:focus, input[type="email"]:focus { border-color: var(--line); }
     .users-section { display: flex; flex-direction: column; gap: 12px; }
     .users-section-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-    .user-row { background: rgba(255,255,255,0.45); border: 1px solid rgba(11,74,99,0.15); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+    .user-row { background: rgba(255,255,255,0.45); border: 1px solid rgba(11,74,99,0.15); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 10px; }
     .user-row-label { font-size: 12px; font-weight: 600; color: var(--line); text-transform: uppercase; letter-spacing: 0.04em; }
     .user-row-fields { display: flex; gap: 8px; }
     .user-row-fields input { flex: 1; }
+    .user-modules { display: flex; flex-direction: column; gap: 6px; }
+    .user-modules-label { font-size: 12px; font-weight: 600; color: var(--ink); opacity: 0.6; }
+    .module-checks { display: flex; flex-wrap: wrap; gap: 6px; }
+    .module-check-item { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.6); border: 1px solid rgba(11,74,99,0.15); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+    .module-check-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--line); cursor: pointer; flex-shrink: 0; margin: 0; padding: 0; border: none; background: none; }
+    .module-check-item span { font-size: 13px; color: var(--ink); line-height: 1.2; }
     .submit-btn { font-family: var(--font); font-size: 16px; font-weight: 700; color: #fff; background: var(--line); border: none; border-radius: 8px; padding: 14px 32px; cursor: pointer; width: 100%; transition: opacity 160ms ease, transform 100ms ease; }
     .submit-btn:hover { opacity: 0.88; }
     .submit-btn:active { transform: scale(0.97); }
@@ -78,7 +82,6 @@
     </div>
     <div class="content">
       <div class="success-banner">
-        <div class="success-icon">🎉</div>
         <div class="success-title">Payment confirmed!</div>
         <div class="success-sub">Thank you for your purchase. Please fill in the details below so we can set up your account.</div>
       </div>
@@ -89,7 +92,7 @@
       </div>
       <div class="form-section" id="setup-form">
         <div class="form-title">Account setup</div>
-        <div class="form-desc">We'll use this information to create your account. You'll receive a welcome email once everything is ready.</div>
+        <div class="form-desc">We'll use this information to create your account. Login credentials are emailed to all users once the account is set up.</div>
         <div class="field">
           <label for="company">Company name</label>
           <input type="text" id="company" placeholder="Your company name" autocomplete="organization" />
@@ -102,7 +105,7 @@
         <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">Send setup information</button>
       </div>
       <div class="confirmation" id="confirmation">
-        <div class="confirmation-title">All done! ✓</div>
+        <div class="confirmation-title">All done!</div>
         <div class="confirmation-text">We've received your setup information and will have your account ready shortly.<br><br>Keep an eye on your inbox — you'll receive a welcome email with login details soon.</div>
       </div>
     </div>
@@ -132,12 +135,13 @@
       document.getElementById('summary-loading').style.display = 'none';
       const rows = document.getElementById('summary-rows');
       rows.style.display = 'block';
-      rows.innerHTML = orderModules.map(m => `
-        <div class="summary-row">
-          <span class="summary-row-name">${m.name} &times; ${m.users} user${m.users > 1 ? 's' : ''}</span>
-          <span class="summary-row-cost">$${m.cost.toFixed(2)}/mo</span>
-        </div>`).join('') + `
-        <div class="summary-total"><span>Total</span><span>$${Number(orderTotal).toFixed(2)}/mo</span></div>`;
+      rows.innerHTML =
+        orderModules.map(m => `
+          <div class="summary-row">
+            <span class="summary-row-name">${m.name} &times; ${m.users} user${m.users > 1 ? 's' : ''}</span>
+            <span class="summary-row-cost">$${m.cost.toFixed(2)}/mo</span>
+          </div>`).join('') +
+        `<div class="summary-total"><span>Total</span><span>$${Number(orderTotal).toFixed(2)}/mo</span></div>`;
     }
 
     function renderUserRows() {
@@ -146,7 +150,24 @@
       const maxUsers = Math.max(...orderModules.map(m => m.users));
       let html = '';
       for (let u = 1; u <= maxUsers; u++) {
-        html += `<div class="user-row"><div class="user-row-label">User ${u}</div><div class="user-row-fields"><input type="text" id="user-name-${u}" placeholder="Full name" /><input type="email" id="user-email-${u}" placeholder="Email" /></div></div>`;
+        const availableModules = orderModules.filter(m => m.users >= u);
+        const checksHTML = availableModules.map(m => `
+          <label class="module-check-item">
+            <input type="checkbox" name="user-${u}-module" value="${m.id}" checked />
+            <span>${m.name}</span>
+          </label>`).join('');
+        html += `
+          <div class="user-row">
+            <div class="user-row-label">User ${u}</div>
+            <div class="user-row-fields">
+              <input type="text" id="user-name-${u}" placeholder="Full name" />
+              <input type="email" id="user-email-${u}" placeholder="Email" />
+            </div>
+            <div class="user-modules">
+              <div class="user-modules-label">Module access</div>
+              <div class="module-checks">${checksHTML}</div>
+            </div>
+          </div>`;
       }
       container.innerHTML = html;
     }
@@ -163,7 +184,9 @@
         const name = document.getElementById(`user-name-${u}`)?.value.trim();
         const email = document.getElementById(`user-email-${u}`)?.value.trim();
         if (!name || !email) { errorEl.textContent = `Please fill in name and email for User ${u}.`; errorEl.style.display = 'block'; return; }
-        users.push({ name, email });
+        const checkedModules = [...document.querySelectorAll(`input[name="user-${u}-module"]:checked`)]
+          .map(cb => { const mod = orderModules.find(m => m.id === cb.value); return mod ? mod.name : cb.value; });
+        users.push({ name, email, modules: checkedModules });
       }
       btn.disabled = true;
       btn.textContent = 'Sending...';
