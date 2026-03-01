@@ -91,6 +91,8 @@ export default function PricingSection() {
   const [state, setState] = useState<Record<string, ModuleState>>(initState);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [modal, setModal] = useState<ModalVideo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const monthlyCost = MODULES.reduce((sum, m) => {
     if (m.freeModule) return sum;
@@ -128,6 +130,44 @@ export default function PricingSection() {
       }
       return updated;
     });
+  };
+
+  const handleCheckout = async () => {
+    setIsLoading(true);
+    setCheckoutError(null);
+
+    // Build list of selected modules with cost info
+    const selectedModules = MODULES
+      .filter((m) => !m.freeModule && state[m.id].checked)
+      .map((m) => ({
+        id: m.id,
+        name: m.name,
+        users: state[m.id].users,
+        cost: state[m.id].users * PRICE,
+      }));
+
+    try {
+      const res = await fetch('/.netlify/functions/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          modules: selectedModules,
+          totalMonthly: monthlyCost,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Checkout failed');
+
+      // Redirect to Stripe checkout
+      window.location.href = data.url;
+
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Something went wrong';
+      setCheckoutError(message);
+      setIsLoading(false);
+    }
   };
 
   const visibleModules = expanded
@@ -225,8 +265,18 @@ export default function PricingSection() {
             })}
           </div>
 
+          {checkoutError && (
+            <p className="pricing__error">{checkoutError}</p>
+          )}
+
           <div className="pricing__cta">
-            <button className="pricing__btn">Proceed to Check out</button>
+            <button
+              className="pricing__btn"
+              onClick={handleCheckout}
+              disabled={isLoading}
+            >
+              {isLoading ? "Redirecting to checkout..." : "Proceed to Check out"}
+            </button>
           </div>
         </div>
       </div>

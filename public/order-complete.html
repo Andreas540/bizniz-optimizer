@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Complete — Bizniz Optimizer</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+  <style>
+    :root {
+      --ink:  #0a0a0a;
+      --line: #0b4a63;
+      --panel: rgba(148, 196, 230, 0.52);
+      --font: 'Inter', system-ui, -apple-system, sans-serif;
+      --site-w: 520px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; font-family: var(--font); color: var(--ink); }
+    body {
+      display: flex;
+      justify-content: center;
+      background:
+        linear-gradient(118deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0) 28%,rgba(255,255,255,0.55) 32%,rgba(255,255,255,0) 36%,rgba(255,255,255,0) 54%,rgba(255,255,255,0.35) 57%,rgba(255,255,255,0.12) 59%,rgba(255,255,255,0) 63%,rgba(255,255,255,0) 78%,rgba(255,255,255,0.25) 81%,rgba(255,255,255,0) 85%),
+        radial-gradient(ellipse 70% 45% at 18% 12%, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0) 100%),
+        radial-gradient(ellipse 60% 40% at 85% 90%, rgba(210,235,252,0.65) 0%, rgba(210,235,252,0) 100%),
+        linear-gradient(155deg,#daeffe 0%,#c2e0f8 18%,#a8d4f5 34%,#bde0fb 50%,#92c8ee 66%,#aad5f6 80%,#cde8ff 100%);
+    }
+    .shell { width: min(var(--site-w), 100vw); min-height: 100vh; box-shadow: 0 0 0 1px rgba(11,74,99,0.15), 0 8px 40px rgba(0,0,0,0.10); display: flex; flex-direction: column; }
+    .header { display: flex; align-items: center; gap: 10px; padding: 16px; background: rgba(235,245,252,0.95); backdrop-filter: blur(10px); border-bottom: 3px solid var(--line); }
+    .header img { height: 52px; width: auto; object-fit: contain; }
+    .header-title { min-width: 0; }
+    .header-line1 { font-weight: 600; font-size: 15px; line-height: 1.25; color: var(--ink); }
+    .header-line2 { font-weight: 700; font-size: 15px; line-height: 1.25; color: var(--line); }
+    .content { flex: 1; padding: 28px 16px 40px; display: flex; flex-direction: column; gap: 24px; }
+    .success-banner { background: rgba(255,255,255,0.55); border: 1.5px solid rgba(11,74,99,0.25); border-radius: 12px; padding: 18px 16px; text-align: center; }
+    .success-icon { font-size: 36px; margin-bottom: 8px; }
+    .success-title { font-size: 20px; font-weight: 700; color: var(--line); margin-bottom: 6px; }
+    .success-sub { font-size: 14px; color: var(--ink); opacity: 0.75; line-height: 1.5; }
+    .summary { background: rgba(255,255,255,0.45); border: 1.5px solid rgba(11,74,99,0.2); border-radius: 10px; padding: 14px 16px; }
+    .summary-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+    .summary-loading { font-size: 13px; color: var(--ink); opacity: 0.6; }
+    .summary-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; padding: 4px 0; border-bottom: 1px solid rgba(11,74,99,0.08); }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-row-name { color: var(--ink); }
+    .summary-row-cost { font-weight: 600; color: var(--line); }
+    .summary-total { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; font-weight: 700; padding-top: 10px; margin-top: 4px; border-top: 2px solid rgba(11,74,99,0.2); }
+    .form-section { display: flex; flex-direction: column; gap: 16px; }
+    .form-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .form-desc { font-size: 13px; color: var(--ink); opacity: 0.7; line-height: 1.5; margin-top: -8px; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 13px; font-weight: 600; color: var(--ink); }
+    input { font-family: var(--font); font-size: 15px; color: var(--ink); background: rgba(255,255,255,0.7); border: 1.5px solid rgba(11,74,99,0.3); border-radius: 8px; padding: 10px 12px; width: 100%; outline: none; transition: border-color 0.2s ease; }
+    input:focus { border-color: var(--line); }
+    .users-section { display: flex; flex-direction: column; gap: 12px; }
+    .users-section-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+    .user-row { background: rgba(255,255,255,0.45); border: 1px solid rgba(11,74,99,0.15); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+    .user-row-label { font-size: 12px; font-weight: 600; color: var(--line); text-transform: uppercase; letter-spacing: 0.04em; }
+    .user-row-fields { display: flex; gap: 8px; }
+    .user-row-fields input { flex: 1; }
+    .submit-btn { font-family: var(--font); font-size: 16px; font-weight: 700; color: #fff; background: var(--line); border: none; border-radius: 8px; padding: 14px 32px; cursor: pointer; width: 100%; transition: opacity 160ms ease, transform 100ms ease; }
+    .submit-btn:hover { opacity: 0.88; }
+    .submit-btn:active { transform: scale(0.97); }
+    .submit-btn:disabled { opacity: 0.5; cursor: default; }
+    .submit-error { font-size: 13px; color: #c62828; text-align: center; }
+    .confirmation { background: rgba(255,255,255,0.55); border: 1.5px solid rgba(11,74,99,0.25); border-radius: 12px; padding: 24px 16px; text-align: center; display: none; }
+    .confirmation.visible { display: block; }
+    .confirmation-title { font-size: 18px; font-weight: 700; color: var(--line); margin-bottom: 8px; }
+    .confirmation-text { font-size: 14px; color: var(--ink); opacity: 0.8; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="header">
+      <img src="/images/logo-cropped.png" alt="Bizniz Optimizer logo" />
+      <div class="header-title">
+        <div class="header-line1">Get in control of your business</div>
+        <div class="header-line2">with the Bizniz Optimizer App</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="success-banner">
+        <div class="success-icon">🎉</div>
+        <div class="success-title">Payment confirmed!</div>
+        <div class="success-sub">Thank you for your purchase. Please fill in the details below so we can set up your account.</div>
+      </div>
+      <div class="summary">
+        <div class="summary-title">Your order</div>
+        <div class="summary-loading" id="summary-loading">Loading order details...</div>
+        <div id="summary-rows" style="display:none"></div>
+      </div>
+      <div class="form-section" id="setup-form">
+        <div class="form-title">Account setup</div>
+        <div class="form-desc">We'll use this information to create your account. You'll receive a welcome email once everything is ready.</div>
+        <div class="field">
+          <label for="company">Company name</label>
+          <input type="text" id="company" placeholder="Your company name" autocomplete="organization" />
+        </div>
+        <div class="users-section">
+          <div class="users-section-title">Users</div>
+          <div id="user-rows"></div>
+        </div>
+        <p class="submit-error" id="submit-error" style="display:none"></p>
+        <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">Send setup information</button>
+      </div>
+      <div class="confirmation" id="confirmation">
+        <div class="confirmation-title">All done! ✓</div>
+        <div class="confirmation-text">We've received your setup information and will have your account ready shortly.<br><br>Keep an eye on your inbox — you'll receive a welcome email with login details soon.</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    let orderModules = [];
+    let orderTotal = 0;
+
+    async function loadSession() {
+      if (!sessionId) { document.getElementById('summary-loading').textContent = 'No order found.'; return; }
+      try {
+        const res = await fetch(`/.netlify/functions/get-session?session_id=${sessionId}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        orderModules = data.modules;
+        orderTotal = data.totalMonthly;
+        renderSummary();
+        renderUserRows();
+      } catch {
+        document.getElementById('summary-loading').textContent = 'Could not load order details — but your payment was successful.';
+      }
+    }
+
+    function renderSummary() {
+      document.getElementById('summary-loading').style.display = 'none';
+      const rows = document.getElementById('summary-rows');
+      rows.style.display = 'block';
+      rows.innerHTML = orderModules.map(m => `
+        <div class="summary-row">
+          <span class="summary-row-name">${m.name} &times; ${m.users} user${m.users > 1 ? 's' : ''}</span>
+          <span class="summary-row-cost">$${m.cost.toFixed(2)}/mo</span>
+        </div>`).join('') + `
+        <div class="summary-total"><span>Total</span><span>$${Number(orderTotal).toFixed(2)}/mo</span></div>`;
+    }
+
+    function renderUserRows() {
+      const container = document.getElementById('user-rows');
+      if (!orderModules.length) { container.innerHTML = '<p style="font-size:13px;opacity:0.6">No modules found.</p>'; return; }
+      const maxUsers = Math.max(...orderModules.map(m => m.users));
+      let html = '';
+      for (let u = 1; u <= maxUsers; u++) {
+        html += `<div class="user-row"><div class="user-row-label">User ${u}</div><div class="user-row-fields"><input type="text" id="user-name-${u}" placeholder="Full name" /><input type="email" id="user-email-${u}" placeholder="Email" /></div></div>`;
+      }
+      container.innerHTML = html;
+    }
+
+    async function handleSubmit() {
+      const btn = document.getElementById('submit-btn');
+      const errorEl = document.getElementById('submit-error');
+      const company = document.getElementById('company').value.trim();
+      errorEl.style.display = 'none';
+      if (!company) { errorEl.textContent = 'Please enter your company name.'; errorEl.style.display = 'block'; return; }
+      const maxUsers = Math.max(...orderModules.map(m => m.users), 1);
+      const users = [];
+      for (let u = 1; u <= maxUsers; u++) {
+        const name = document.getElementById(`user-name-${u}`)?.value.trim();
+        const email = document.getElementById(`user-email-${u}`)?.value.trim();
+        if (!name || !email) { errorEl.textContent = `Please fill in name and email for User ${u}.`; errorEl.style.display = 'block'; return; }
+        users.push({ name, email });
+      }
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      try {
+        const res = await fetch('/.netlify/functions/send-order-notification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId, company, users, modules: orderModules, totalMonthly: orderTotal }),
+        });
+        if (!res.ok) throw new Error('Failed to send');
+        document.getElementById('setup-form').style.display = 'none';
+        document.getElementById('confirmation').classList.add('visible');
+      } catch {
+        errorEl.textContent = 'Something went wrong. Please email us directly.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Send setup information';
+      }
+    }
+
+    loadSession();
+  </script>
+</body>
+</html>
