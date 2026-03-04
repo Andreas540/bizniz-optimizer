@@ -3,12 +3,12 @@ import "./QASection.css";
 
 const QA_ITEMS = [
   {
-    question: "Question 1",
-    answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+    question: "What kind of businesses is the app for?",
+    answer: "The current version is built for manufacturers and distributors. Service providers will be included shortly",
   },
   {
-    question: "Question 2",
-    answer: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim.",
+    question: "How do I get access to the app",
+    answer: "After check out, you will be asked to provide some company- and user info. After sending this information you will be emailed a link and password within a few hours.",
   },
   {
     question: "Question 3",
