@@ -16,7 +16,7 @@ export default function App() {
       { id: "intro",    label: "Introduction" },
       { id: "previews", label: "Previews" },
       { id: "contact",  label: "Contact us!" },
-      { id: "pricing",  label: "Pricing" },
+      { id: "pricing",  label: "Pricing & Purchase" },
       { id: "qa",       label: "Q&A" },
       { id: "making",   label: "In the making" },
     ],
