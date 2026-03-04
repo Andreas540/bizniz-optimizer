@@ -4,7 +4,7 @@ import "./QASection.css";
 const QA_ITEMS = [
   {
     question: "What kind of businesses is the app for?",
-    answer: "The current version is built for manufacturers and distributors. Service providers will be included shortly.",
+    answer: "The current version is built for manufacturers and distributors. Service providers will be included shortly. Watch videos on the preview page to see all features, or contact us for more information.",
   },
   {
     question: "How do I get access to the app?",
