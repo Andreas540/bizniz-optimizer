@@ -17,8 +17,7 @@ export default function App() {
       { id: "previews", label: "Previews" },
       { id: "contact",  label: "Contact us!" },
       { id: "pricing",  label: "Pricing & Purchase" },
-      { id: "qa",       label: "Q&A" },
-      { id: "making",   label: "In the making" },
+      { id: "qa",       label: "Q&A" },      
     ],
     []
   );
@@ -139,11 +138,7 @@ export default function App() {
           <section ref={setSectionRef("qa")} id="qa" className="section">
             <QASection />
           </section>
-
-          <section ref={setSectionRef("making")} id="making" className="section">
-            <h2 className="h2" style={{ padding: "28px 16px 10px" }}>In the making</h2>
-            <p className="p" style={{ padding: "0 16px" }}>Roadmap, features, etc.</p>
-          </section>
+          
         </main>
       </div>
     </div>
