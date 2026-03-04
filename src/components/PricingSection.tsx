@@ -178,7 +178,7 @@ export default function PricingSection() {
     <>
       <div className="pricing-scroll">
         <div className="pricing">
-          <h2 className="pricing__title">Previews, Pricing and Purchase</h2>
+          <h2 className="pricing__title">Pricing and Purchase</h2>
 
           <div className="pricing__boxes">
             <div className="pricing__box">
