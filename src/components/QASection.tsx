@@ -4,43 +4,19 @@ import "./QASection.css";
 const QA_ITEMS = [
   {
     question: "What kind of businesses is the app for?",
-    answer: "The current version is built for manufacturers and distributors. Service providers will be included shortly",
+    answer: "The current version is built for manufacturers and distributors. Service providers will be included shortly.",
   },
   {
-    question: "How do I get access to the app",
-    answer: "After check out, you will be asked to provide some company- and user info. After sending this information you will be emailed a link and password within a few hours.",
+    question: "How do I get access to the app?",
+    answer: "After check out, you will be asked to provide company name and user email(s). After sending this information you will be emailed a link and password within a few hours.",
   },
   {
-    question: "Question 3",
-    answer: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta.",
+    question: "Can I cancel anytime?",
+    answer: "Yes. It is a monthly subscription that can be cancelled at any time. Cancellation is made on the Settings page in the app.",
   },
   {
-    question: "Question 4",
-    answer: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt neque porro quisquam est.",
-  },
-  {
-    question: "Question 5",
-    answer: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate.",
-  },
-  {
-    question: "Question 6",
-    answer: "Nam libero tempore cum soluta nobis eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus omnis voluptas assumenda est omnis dolor repellendus.",
-  },
-  {
-    question: "Question 7",
-    answer: "Temporibus autem quibusdam et aut officiis debitis rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint molestiae non recusandae itaque earum rerum hic tenetur a sapiente delectus.",
-  },
-  {
-    question: "Question 8",
-    answer: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur vel illum qui dolorem eum fugiat quo voluptas nulla pariatur et expedita distinctio.",
-  },
-  {
-    question: "Question 9",
-    answer: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur adipisci velit sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.",
-  },
-  {
-    question: "Question 10",
-    answer: "Ut enim ad minima veniam quis nostrum exercitationem ullam corporis suscipit laboriosam nisi ut aliquid ex ea commodi consequatur quis autem vel eum iure reprehenderit qui in ea voluptate.",
+    question: "What languages, timezones and currencies are supported",
+    answer: "As of now the app supports English, dollars($) and the EST timezone. Spanish, Swedish, Euro(€), SEK and all timezones will be added shortly.",
   },
 ];
 
