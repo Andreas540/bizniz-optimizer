@@ -245,5 +245,13 @@
   transition: opacity 160ms ease, transform 100ms ease;
 }
 
+.pricing__error {
+  font-family: var(--font);
+  font-size: 13px;
+  color: #c62828;
+  text-align: center;
+  margin: 8px 0 0;
+}
+
 .pricing__btn:hover { opacity: 0.88; }
 .pricing__btn:active { transform: scale(0.97); }
