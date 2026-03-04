@@ -7,8 +7,8 @@ import PricingSection from "./components/PricingSection";
 import QASection from "./components/QASection";
 import "./App.css";
 
-type SectionId = "intro" | "previews" | "contact" | "pricing" | "qa" | "making";
-const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "qa", "making"];
+type SectionId = "intro" | "previews" | "contact" | "pricing" | "qa";
+const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "qa"];
 
 export default function App() {
   const links = useMemo(
@@ -27,8 +27,8 @@ export default function App() {
   const mainRef = useRef<HTMLElement | null>(null);
 
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
-    intro: null, previews: null, contact: null, pricing: null, qa: null, making: null,
-  });
+    intro: null, previews: null, contact: null, pricing: null, qa: null,
+});
 
   const applyTransforms = useCallback((idx: number) => {
     SECTION_IDS.forEach((id, i) => {
