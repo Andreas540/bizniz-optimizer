@@ -16,7 +16,7 @@ const QA_ITEMS = [
   },
   {
     question: "What languages, timezones and currencies are supported",
-    answer: "As of now the app supports English, dollars($) and the EST timezone. Spanish, Swedish, Euro(€), SEK and all timezones will be added shortly.",
+    answer: "As of now the app supports English, dollars($) and the EST timezone. Spanish, Swedish, Euro(€), SEK and all timezones will be supported shortly.",
   },
 ];
 

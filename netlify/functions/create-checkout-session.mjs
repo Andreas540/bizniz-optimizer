@@ -34,6 +34,7 @@ export default async function handler(req) {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
+      allow_promotion_codes: true,
       line_items: lineItems,
       success_url: `${origin}/order-complete?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?cancelled=true`,
