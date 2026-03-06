@@ -60,6 +60,7 @@ export default async function handler(req) {
           </table>
           <p style="font-size:12px;color:#666;margin:0;">
             Stripe Session ID: <code>${sessionId}</code><br/>
+            Stripe Customer ID: <code>${session.customer || 'not available'}</code><br/>
             Customer email: <code>${session.customer_details?.email || 'not available'}</code>
           </p>
         </div>
@@ -73,7 +74,7 @@ export default async function handler(req) {
       html,
     });
 
-    return new Response(JSON.stringify({ modules, totalMonthly }), {
+    return new Response(JSON.stringify({ modules, totalMonthly, customerId: session.customer }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
