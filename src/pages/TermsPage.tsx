@@ -75,6 +75,17 @@ export default function TermsPage() {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+  // Allow scrolling on this page (App.css sets overflow: hidden globally)
+  document.documentElement.style.overflow = 'auto'
+  document.body.style.overflow = 'auto'
+  return () => {
+    // Restore when leaving
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+  }
+}, [])
+
   return (
     <div className="terms-root">
       {/* Header */}
