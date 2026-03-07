@@ -1,23 +1,25 @@
 import { useMemo, useRef, useEffect, useCallback } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import QuoteAnimation from "./components/QuoteAnimation";
 import PreviewSection from "./components/PreviewSection";
 import ContactSection from "./components/ContactSection";
 import PricingSection from "./components/PricingSection";
 import QASection from "./components/QASection";
+import TermsPage from "./pages/TermsPage";
 import "./App.css";
 
 type SectionId = "intro" | "previews" | "contact" | "pricing" | "qa";
 const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "qa"];
 
-export default function App() {
+function MainSite() {
   const links = useMemo(
     () => [
       { id: "intro",    label: "Introduction" },
       { id: "previews", label: "Previews" },
       { id: "contact",  label: "Contact us!" },
       { id: "pricing",  label: "Pricing & Purchase" },
-      { id: "qa",       label: "Q&A" },      
+      { id: "qa",       label: "Q&A" },
     ],
     []
   );
@@ -28,7 +30,7 @@ export default function App() {
 
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
     intro: null, previews: null, contact: null, pricing: null, qa: null,
-});
+  });
 
   const applyTransforms = useCallback((idx: number) => {
     SECTION_IDS.forEach((id, i) => {
@@ -138,9 +140,19 @@ export default function App() {
           <section ref={setSectionRef("qa")} id="qa" className="section">
             <QASection />
           </section>
-          
         </main>
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainSite />} />
+        <Route path="/terms" element={<TermsPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
