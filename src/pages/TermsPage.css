@@ -1,6 +1,11 @@
-/* ── Root ──────────────────────────────────────────────────────────────────── */
+/* ── Root — this element scrolls, not html/body ──────────────────────────── */
 .terms-root {
-  min-height: 100vh;
+  /* Take up full viewport */
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: #0a0a0a;
   background:
@@ -30,8 +35,6 @@
       #aad5f6 80%,
       #cde8ff 100%
     );
-  /* CRITICAL: allow page to scroll */
-  overflow-y: auto;
 }
 
 /* ── Header ────────────────────────────────────────────────────────────────── */
@@ -41,7 +44,7 @@
   z-index: 10;
   padding: 14px 32px;
   border-bottom: 1px solid rgba(11, 74, 99, 0.12);
-  background: rgba(194, 224, 248, 0.75);
+  background: rgba(194, 224, 248, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -54,15 +57,12 @@
   text-decoration: none;
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.01em;
   transition: opacity 0.15s;
 }
 
-.terms-back:hover {
-  opacity: 0.7;
-}
+.terms-back:hover { opacity: 0.7; }
 
-/* ── Layout ─────────────────────────────────────────────────────────────────── */
+/* ── Layout ──────────────────────────────────────────────────────────────── */
 .terms-layout {
   display: flex;
   max-width: 1000px;
@@ -70,21 +70,27 @@
   padding: 0 24px 80px;
   gap: 48px;
   align-items: flex-start;
+  /* Ensure layout is tall enough for sticky to work */
+  min-height: calc(100vh - 49px);
 }
 
-/* ── Sidebar ────────────────────────────────────────────────────────────────── */
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
 .terms-sidebar {
   display: none;
-  position: sticky;
-  top: 64px;
-  width: 200px;
-  flex-shrink: 0;
-  padding-top: 36px;
 }
 
 @media (min-width: 900px) {
   .terms-sidebar {
     display: block;
+    /* Sticky relative to .terms-root scroll container */
+    position: sticky;
+    top: 70px;
+    width: 200px;
+    flex-shrink: 0;
+    padding-top: 36px;
+    /* Must not exceed viewport height or it won't stick */
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
   }
 }
 
@@ -120,14 +126,14 @@
   border-left-color: rgba(11, 74, 99, 0.3);
 }
 
-/* ── Main ────────────────────────────────────────────────────────────────────── */
+/* ── Main content ────────────────────────────────────────────────────────── */
 .terms-main {
   flex: 1;
   min-width: 0;
   padding-top: 36px;
 }
 
-/* ── Title block ─────────────────────────────────────────────────────────────── */
+/* ── Title block ─────────────────────────────────────────────────────────── */
 .terms-badge {
   display: inline-block;
   font-size: 10px;
@@ -157,16 +163,17 @@
   margin: 0 0 16px;
 }
 
-/* ── Divider ─────────────────────────────────────────────────────────────────── */
+/* ── Divider ─────────────────────────────────────────────────────────────── */
 .terms-divider {
   height: 1px;
   background: rgba(11, 74, 99, 0.15);
-  margin: 28px 0;
+  margin: 24px 0;
 }
 
-/* ── Part heading ────────────────────────────────────────────────────────────── */
+/* ── Part heading ────────────────────────────────────────────────────────── */
 .terms-part-heading {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  scroll-margin-top: 70px;
 }
 
 .terms-part-heading span {
@@ -176,7 +183,7 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(11, 74, 99, 0.45);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .terms-part-heading h2 {
@@ -187,9 +194,9 @@
   margin: 0;
 }
 
-/* ── Sections ────────────────────────────────────────────────────────────────── */
+/* ── Sections ────────────────────────────────────────────────────────────── */
 .terms-section {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   scroll-margin-top: 70px;
 }
 
@@ -197,7 +204,7 @@
   font-size: 15px;
   font-weight: 700;
   color: #0a0a0a;
-  margin: 0 0 8px;
+  margin: 0 0 6px;
 }
 
 .terms-sub {
@@ -208,7 +215,7 @@
   font-size: 13px;
   font-weight: 600;
   color: #0b4a63;
-  margin: 0 0 6px;
+  margin: 0 0 5px;
 }
 
 .terms-p {
@@ -251,22 +258,20 @@
   transition: opacity 0.15s;
 }
 
-.terms-link:hover {
-  opacity: 0.7;
-}
+.terms-link:hover { opacity: 0.7; }
 
-/* ── Contact card ────────────────────────────────────────────────────────────── */
+/* ── Contact card ────────────────────────────────────────────────────────── */
 .terms-contact-card {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 16px 20px;
+  padding: 14px 18px;
   border: 1px solid rgba(11, 74, 99, 0.2);
   border-radius: 10px;
   background: rgba(148, 196, 230, 0.2);
   font-size: 13px;
   color: rgba(10, 10, 10, 0.75);
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .terms-contact-card strong {
@@ -275,29 +280,18 @@
   margin-bottom: 2px;
 }
 
-/* ── Footer ──────────────────────────────────────────────────────────────────── */
+/* ── Footer ──────────────────────────────────────────────────────────────── */
 .terms-footer {
   font-size: 12px;
   color: rgba(11, 74, 99, 0.4);
   margin-top: 40px;
-  padding-top: 20px;
+  padding-top: 16px;
   border-top: 1px solid rgba(11, 74, 99, 0.12);
 }
 
-/* ── Scroll margin for anchor targets ───────────────────────────────────────── */
-[id] {
-  scroll-margin-top: 70px;
-}
-
-/* ── Mobile ──────────────────────────────────────────────────────────────────── */
+/* ── Mobile ──────────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .terms-header {
-    padding: 12px 16px;
-  }
-  .terms-layout {
-    padding: 0 16px 60px;
-  }
-  .terms-main {
-    padding-top: 24px;
-  }
+  .terms-header { padding: 12px 16px; }
+  .terms-layout  { padding: 0 16px 60px; }
+  .terms-main    { padding-top: 24px; }
 }

@@ -42,49 +42,55 @@ function Ul({ items }: { items: string[] }) {
 }
 
 const TOC_ITEMS = [
-  { href: "#tos", label: "Part 1 — Terms of Service" },
-  { href: "#definitions", label: "1. Definitions" },
-  { href: "#account", label: "2. Account Registration" },
-  { href: "#payment", label: "3. Subscription and Payment" },
-  { href: "#acceptable-use", label: "4. Acceptable Use" },
-  { href: "#data-ownership", label: "5. Data Ownership" },
-  { href: "#availability", label: "6. Service Availability" },
-  { href: "#termination", label: "7. Termination" },
-  { href: "#liability", label: "8. Limitation of Liability" },
-  { href: "#warranties", label: "9. Disclaimer of Warranties" },
-  { href: "#governing-law", label: "10. Governing Law" },
-  { href: "#changes-tos", label: "11. Changes to Terms" },
-  { href: "#privacy", label: "Part 2 — Privacy Policy" },
-  { href: "#controller", label: "1. Data Controller" },
+  { href: "#tos",             label: "Part 1 — Terms of Service", part: true },
+  { href: "#definitions",     label: "1. Definitions" },
+  { href: "#account",         label: "2. Account Registration" },
+  { href: "#payment",         label: "3. Subscription and Payment" },
+  { href: "#acceptable-use",  label: "4. Acceptable Use" },
+  { href: "#data-ownership",  label: "5. Data Ownership" },
+  { href: "#availability",    label: "6. Service Availability" },
+  { href: "#termination",     label: "7. Termination" },
+  { href: "#liability",       label: "8. Limitation of Liability" },
+  { href: "#warranties",      label: "9. Disclaimer of Warranties" },
+  { href: "#governing-law",   label: "10. Governing Law" },
+  { href: "#changes-tos",     label: "11. Changes to Terms" },
+  { href: "#privacy",         label: "Part 2 — Privacy Policy", part: true },
+  { href: "#controller",      label: "1. Data Controller" },
   { href: "#what-we-collect", label: "2. What Data We Collect" },
-  { href: "#how-we-use", label: "3. How We Use Your Data" },
-  { href: "#storage", label: "4. Data Storage and Transfers" },
-  { href: "#sharing", label: "5. Data Sharing" },
-  { href: "#retention", label: "6. Data Retention" },
-  { href: "#security", label: "7. Security" },
-  { href: "#gdpr", label: "8. Your Rights — EU/EEA (GDPR)" },
-  { href: "#ccpa", label: "9. Your Rights — California (CCPA)" },
-  { href: "#cookies", label: "10. Cookies" },
-  { href: "#children", label: "11. Children's Privacy" },
+  { href: "#how-we-use",      label: "3. How We Use Your Data" },
+  { href: "#storage",         label: "4. Data Storage and Transfers" },
+  { href: "#sharing",         label: "5. Data Sharing" },
+  { href: "#retention",       label: "6. Data Retention" },
+  { href: "#security",        label: "7. Security" },
+  { href: "#gdpr",            label: "8. Your Rights — EU/EEA (GDPR)" },
+  { href: "#ccpa",            label: "9. Your Rights — California (CCPA)" },
+  { href: "#cookies",         label: "10. Cookies" },
+  { href: "#children",        label: "11. Children's Privacy" },
   { href: "#changes-privacy", label: "12. Changes to Privacy Policy" },
-  { href: "#contact", label: "13. Contact" },
+  { href: "#contact",         label: "13. Contact" },
 ];
 
 export default function TermsPage() {
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    // App.css sets overflow: hidden on html, body, AND #root — override all three
+    const root = document.getElementById("root");
+    const prev = {
+      html:  document.documentElement.style.overflow,
+      body:  document.body.style.overflow,
+      root:  root?.style.overflow ?? "",
+    };
+    document.documentElement.style.overflow = "auto";
+    document.body.style.overflow            = "auto";
+    if (root) root.style.overflow           = "auto";
 
-  useEffect(() => {
-  // Allow scrolling on this page (App.css sets overflow: hidden globally)
-  document.documentElement.style.overflow = 'auto'
-  document.body.style.overflow = 'auto'
-  return () => {
-    // Restore when leaving
-    document.documentElement.style.overflow = 'hidden'
-    document.body.style.overflow = 'hidden'
-  }
-}, [])
+    window.scrollTo(0, 0);
+
+    return () => {
+      document.documentElement.style.overflow = prev.html;
+      document.body.style.overflow            = prev.body;
+      if (root) root.style.overflow           = prev.root;
+    };
+  }, []);
 
   return (
     <div className="terms-root">
@@ -99,7 +105,7 @@ export default function TermsPage() {
       </header>
 
       <div className="terms-layout">
-        {/* Sidebar TOC — desktop only */}
+        {/* Sidebar — desktop only, scrolls with the page wrapper */}
         <aside className="terms-sidebar">
           <p className="terms-sidebar-label">On this page</p>
           <nav>
@@ -107,7 +113,7 @@ export default function TermsPage() {
               <a
                 key={item.href}
                 href={item.href}
-                className={`terms-toc-link ${item.href === "#tos" || item.href === "#privacy" ? "terms-toc-part" : ""}`}
+                className={`terms-toc-link${item.part ? " terms-toc-part" : ""}`}
               >
                 {item.label}
               </a>
@@ -117,7 +123,6 @@ export default function TermsPage() {
 
         {/* Main content */}
         <main className="terms-main">
-          {/* Title block */}
           <div className="terms-title-block">
             <div className="terms-badge">Legal</div>
             <h1 className="terms-h1">Terms of Service<br />& Privacy Policy</h1>
@@ -140,7 +145,7 @@ export default function TermsPage() {
 
           <div className="terms-divider" />
 
-          {/* ── Part 1: Terms of Service ───────────────────────────────── */}
+          {/* ── Part 1 ── */}
           <div id="tos" className="terms-part-heading">
             <span>Part 1</span>
             <h2>Terms of Service</h2>
@@ -251,7 +256,7 @@ export default function TermsPage() {
 
           <div className="terms-divider" />
 
-          {/* ── Part 2: Privacy Policy ─────────────────────────────────── */}
+          {/* ── Part 2 ── */}
           <div id="privacy" className="terms-part-heading">
             <span>Part 2</span>
             <h2>Privacy Policy</h2>
@@ -260,17 +265,16 @@ export default function TermsPage() {
           <P>
             {COMPANY} is committed to protecting your privacy. This Privacy Policy
             explains how we collect, use, store, and share information when you use
-            Bizniz Optimizer. It applies to all users globally, with specific
-            provisions for EU/EEA residents under GDPR and California residents under
-            CCPA.
+            Bizniz Optimizer. It applies to all users globally, with specific provisions
+            for EU/EEA residents under GDPR and California residents under CCPA.
           </P>
 
           <Section id="controller" title="1. Data Controller">
             <P>
-              {COMPANY} is the data controller for personal data processed in
-              connection with account management, billing, and support. For data that
-              Subscribers upload and manage within the Service, the Subscriber acts as
-              data controller and {COMPANY} acts as data processor.
+              {COMPANY} is the data controller for personal data processed in connection
+              with account management, billing, and support. For data that Subscribers
+              upload and manage within the Service, the Subscriber acts as data
+              controller and {COMPANY} acts as data processor.
             </P>
             <P>
               Contact for privacy matters:{" "}
@@ -333,20 +337,14 @@ export default function TermsPage() {
           </Section>
 
           <Section id="sharing" title="5. Data Sharing and Third Parties">
-            <P>
-              We share data only with the following sub-processors where necessary to
-              provide the Service:
-            </P>
+            <P>We share data only with the following sub-processors where necessary to provide the Service:</P>
             <Ul items={[
               "Neon Inc. — database hosting (AWS us-east-1).",
               "Netlify Inc. — application hosting and deployment.",
               "Stripe Inc. — payment processing.",
               "Resend Inc. — transactional email delivery.",
             ]} />
-            <P>
-              We do not share your data with any other third parties without your
-              explicit consent, except where required by law.
-            </P>
+            <P>We do not share your data with any other third parties without your explicit consent, except where required by law.</P>
           </Section>
 
           <Section id="retention" title="6. Data Retention">
@@ -366,8 +364,8 @@ export default function TermsPage() {
             <P>
               We implement reasonable technical and organizational measures to protect
               your data, including encrypted connections (TLS), hashed passwords,
-              JWT-based authentication, and role-based access control. However, no
-              system is completely secure, and we cannot guarantee absolute security.
+              JWT-based authentication, and role-based access control. No system is
+              completely secure, and we cannot guarantee absolute security.
             </P>
             <P>
               Our staff may access customer data only for the purposes of providing
@@ -377,10 +375,7 @@ export default function TermsPage() {
           </Section>
 
           <Section id="gdpr" title="8. Your Rights — EU/EEA Residents (GDPR)">
-            <P>
-              If you are located in the EU or EEA, you have the following rights under
-              GDPR:
-            </P>
+            <P>If you are located in the EU or EEA, you have the following rights under GDPR:</P>
             <Ul items={[
               "Right of access: request a copy of the personal data we hold about you.",
               "Right to rectification: request correction of inaccurate or incomplete data.",
@@ -395,16 +390,12 @@ export default function TermsPage() {
               <a href={`mailto:${PRIVACY_EMAIL}`} className="terms-link">{PRIVACY_EMAIL}</a>.
               We will respond within 30 days. If you believe your rights have not been
               respected, you have the right to lodge a complaint with your local
-              supervisory authority (e.g., Integritetsskyddsmyndigheten (IMY) in
-              Sweden).
+              supervisory authority (e.g., Integritetsskyddsmyndigheten (IMY) in Sweden).
             </P>
           </Section>
 
           <Section id="ccpa" title="9. Your Rights — California Residents (CCPA/CPRA)">
-            <P>
-              If you are a California resident, you have the following rights under the
-              CCPA and CPRA:
-            </P>
+            <P>If you are a California resident, you have the following rights under the CCPA and CPRA:</P>
             <Ul items={[
               "Right to know: request disclosure of the categories and specific pieces of personal information we have collected about you.",
               "Right to delete: request deletion of personal information we hold about you.",
@@ -431,7 +422,7 @@ export default function TermsPage() {
             <P>
               The Service is not directed at individuals under the age of 16. We do not
               knowingly collect personal data from children. If you believe a child has
-              submitted personal data to us, please contact us at{" "}
+              submitted personal data to us, please contact{" "}
               <a href={`mailto:${PRIVACY_EMAIL}`} className="terms-link">{PRIVACY_EMAIL}</a>{" "}
               and we will delete it promptly.
             </P>
@@ -439,18 +430,15 @@ export default function TermsPage() {
 
           <Section id="changes-privacy" title="12. Changes to This Privacy Policy">
             <P>
-              We may update this Privacy Policy from time to time. We will notify you
-              of material changes by email or by posting a notice within the Service.
-              The updated policy will be effective from the date indicated at the top of
-              the document.
+              We may update this Privacy Policy from time to time. We will notify you of
+              material changes by email or by posting a notice within the Service. The
+              updated policy will be effective from the date indicated at the top of the
+              document.
             </P>
           </Section>
 
           <Section id="contact" title="13. Contact">
-            <P>
-              For any questions or concerns regarding this document, data privacy, or
-              to exercise your rights, contact us at:
-            </P>
+            <P>For any questions, data privacy requests, or to exercise your rights:</P>
             <div className="terms-contact-card">
               <strong>{COMPANY}</strong>
               <a href={`mailto:${PRIVACY_EMAIL}`} className="terms-link">{PRIVACY_EMAIL}</a>
@@ -458,9 +446,7 @@ export default function TermsPage() {
             </div>
           </Section>
 
-          <div className="terms-footer">
-            Last updated: {EFFECTIVE_DATE}
-          </div>
+          <div className="terms-footer">Last updated: {EFFECTIVE_DATE}</div>
         </main>
       </div>
     </div>
