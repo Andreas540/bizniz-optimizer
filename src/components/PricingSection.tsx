@@ -272,15 +272,15 @@ export default function PricingSection() {
               className="pricing__terms-checkbox"
             />
             <span>
-              I agree to the{" "}
-              <a
-                href="/terms"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="pricing__terms-link"
-              >
-                Terms of Service &amp; Privacy Policy
-              </a>
+              I agree to the{" "}              
+                <span
+  onClick={() => window.open('/terms', '_blank')}
+  className="pricing__terms-link"
+  role="link"
+  tabIndex={0}
+>
+  Terms of Service &amp; Privacy Policy
+</span>
             </span>
           </label>
 
