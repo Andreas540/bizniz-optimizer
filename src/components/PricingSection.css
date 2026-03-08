@@ -253,5 +253,39 @@
   margin: 8px 0 0;
 }
 
+.pricing__terms {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 4px;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  user-select: none;
+}
+
+.pricing__terms-checkbox {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+  accent-color: #0b4a63;
+}
+
+.pricing__terms-link {
+  color: #0b4a63;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.pricing__terms-link:hover {
+  opacity: 0.7;
+}
+
+.pricing__btn--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .pricing__btn:hover { opacity: 0.88; }
 .pricing__btn:active { transform: scale(0.97); }

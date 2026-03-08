@@ -93,6 +93,7 @@ export default function PricingSection() {
   const [modal, setModal] = useState<ModalVideo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const monthlyCost = MODULES.reduce((sum, m) => {
     if (m.freeModule) return sum;
@@ -133,10 +134,10 @@ export default function PricingSection() {
   };
 
   const handleCheckout = async () => {
+    if (!termsAccepted) return;
     setIsLoading(true);
     setCheckoutError(null);
 
-    // Build list of selected modules with cost info
     const selectedModules = MODULES
       .filter((m) => !m.freeModule && state[m.id].checked)
       .map((m) => ({
@@ -157,10 +158,7 @@ export default function PricingSection() {
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || 'Checkout failed');
-
-      // Redirect to Stripe checkout
       window.location.href = data.url;
 
     } catch (err: unknown) {
@@ -265,15 +263,36 @@ export default function PricingSection() {
             })}
           </div>
 
+          {/* Terms checkbox */}
+          <label className="pricing__terms">
+            <input
+              type="checkbox"
+              checked={termsAccepted}
+              onChange={(e) => setTermsAccepted(e.target.checked)}
+              className="pricing__terms-checkbox"
+            />
+            <span>
+              I agree to the{" "}
+              <a
+                href="/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="pricing__terms-link"
+              >
+                Terms of Service &amp; Privacy Policy
+              </a>
+            </span>
+          </label>
+
           {checkoutError && (
             <p className="pricing__error">{checkoutError}</p>
           )}
 
           <div className="pricing__cta">
             <button
-              className="pricing__btn"
+              className={`pricing__btn ${!termsAccepted ? "pricing__btn--disabled" : ""}`}
               onClick={handleCheckout}
-              disabled={isLoading}
+              disabled={isLoading || !termsAccepted}
             >
               {isLoading ? "Redirecting to checkout..." : "Proceed to Check out"}
             </button>
