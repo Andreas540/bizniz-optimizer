@@ -83,6 +83,16 @@
   border-bottom: none;
 }
 
+.pricing__module--coming-soon {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* Re-enable expand click for coming-soon modules */
+.pricing__module--coming-soon .pricing__module-info {
+  pointer-events: auto;
+}
+
 .pricing__module-header {
   display: flex;
   align-items: flex-start;

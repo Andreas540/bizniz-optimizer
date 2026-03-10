@@ -19,6 +19,7 @@ type Module = {
   required?: boolean;
   noUserEdit?: boolean;
   freeModule?: boolean;
+  comingSoon?: boolean;
 };
 
 const MODULES: Module[] = [
@@ -62,6 +63,8 @@ const MODULES: Module[] = [
   {
     id: "reports",
     name: "Reports",
+    tag: { text: "- Coming soon" },
+    comingSoon: true,
     features: [{ label: "All Reports" }],
   },
   {
@@ -96,7 +99,7 @@ export default function PricingSection() {
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const monthlyCost = MODULES.reduce((sum, m) => {
-    if (m.freeModule) return sum;
+    if (m.freeModule || m.comingSoon) return sum;
     const s = state[m.id];
     if (!s.checked) return sum;
     return sum + s.users * PRICE;
@@ -107,7 +110,7 @@ export default function PricingSection() {
 
   const toggleCheck = (id: string) => {
     const mod = MODULES.find((m) => m.id === id)!;
-    if (mod.required) return;
+    if (mod.required || mod.comingSoon) return;
     setState((prev) => {
       const nowChecked = !prev[id].checked;
       const updated = { ...prev, [id]: { ...prev[id], checked: nowChecked } };
@@ -139,7 +142,7 @@ export default function PricingSection() {
     setCheckoutError(null);
 
     const selectedModules = MODULES
-      .filter((m) => !m.freeModule && state[m.id].checked)
+      .filter((m) => !m.freeModule && !m.comingSoon && state[m.id].checked)
       .map((m) => ({
         id: m.id,
         name: m.name,
@@ -198,7 +201,7 @@ export default function PricingSection() {
               const isExpanded = expanded === mod.id;
 
               return (
-                <div key={mod.id} className="pricing__module">
+                <div key={mod.id} className={`pricing__module${mod.comingSoon ? " pricing__module--coming-soon" : ""}`}>
                   <div className="pricing__module-header">
                     <div className="pricing__module-info" onClick={() => toggleExpand(mod.id)}>
                       <span className="pricing__module-name">
@@ -214,9 +217,10 @@ export default function PricingSection() {
 
                     <div className="pricing__controls">
                       <button
-                        className={`pricing__check ${s.checked ? "pricing__check--on" : ""} ${mod.required ? "pricing__check--locked" : ""}`}
+                        className={`pricing__check ${s.checked ? "pricing__check--on" : ""} ${mod.required || mod.comingSoon ? "pricing__check--locked" : ""}`}
                         onClick={() => toggleCheck(mod.id)}
                         aria-label={s.checked ? "Uncheck module" : "Check module"}
+                        disabled={!!mod.comingSoon}
                       >
                         {s.checked && (
                           <svg viewBox="0 0 12 10" fill="none">
@@ -226,16 +230,16 @@ export default function PricingSection() {
                       </button>
 
                       <select
-                        className={`pricing__users ${!s.checked || mod.noUserEdit ? "pricing__users--inactive" : ""}`}
+                        className={`pricing__users ${!s.checked || mod.noUserEdit || mod.comingSoon ? "pricing__users--inactive" : ""}`}
                         value={s.users}
-                        disabled={!s.checked || !!mod.noUserEdit}
+                        disabled={!s.checked || !!mod.noUserEdit || !!mod.comingSoon}
                         onChange={(e) => setUsers(mod.id, Number(e.target.value))}
                       >
                         {[1, 2, 3, 4, 5].map((n) => (
                           <option key={n} value={n}>{n}</option>
                         ))}
                       </select>
-                      <span className={`pricing__users-label ${!s.checked ? "pricing__users-label--inactive" : ""}`}>
+                      <span className={`pricing__users-label ${!s.checked || mod.comingSoon ? "pricing__users-label--inactive" : ""}`}>
                         User(s)
                       </span>
                     </div>
@@ -274,13 +278,13 @@ export default function PricingSection() {
             <span>
               I agree to the{" "}              
                 <span
-  onClick={() => window.open('/terms', '_blank')}
-  className="pricing__terms-link"
-  role="link"
-  tabIndex={0}
->
-  Terms of Service &amp; Privacy Policy
-</span>
+                  onClick={() => window.open('/terms', '_blank')}
+                  className="pricing__terms-link"
+                  role="link"
+                  tabIndex={0}
+                >
+                  Terms of Service &amp; Privacy Policy
+                </span>
             </span>
           </label>
 
