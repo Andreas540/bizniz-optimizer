@@ -27,7 +27,7 @@ const MODULES: Module[] = [
       { label: "New Payment" },
       { label: "Partners" },
       { label: "Products",      hasPreview: true, videoSrc: "/videos/register-products.mp4",  videoTitle: "Products" },
-      { label: "Price Checker" },
+      { label: "Price Checker", hasPreview: true, videoSrc: "/videos/price-checker.mp4",  videoTitle: "Price Checker" },
       { label: "Create Invoice" },
       { label: "Costs" },
     ],
@@ -37,7 +37,7 @@ const MODULES: Module[] = [
     name: "Supply and Demand",
     features: [
       { label: "Supply & Demand" },
-      { label: "Production" },
+      { label: "Production", hasPreview: true, videoSrc: "/videos/production.mp4",  videoTitle: "Production" },
       { label: "Warehouse" },
       { label: "New Order, Supplier" },
       { label: "Suppliers" },
