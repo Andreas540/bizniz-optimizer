@@ -24,7 +24,7 @@ const MODULES: Module[] = [
       { label: "Dashboard" },
       { label: "Customers",     hasPreview: true, videoSrc: "/videos/register-customers.mp4", videoTitle: "Customers" },
       { label: "New Order",     hasPreview: true, videoSrc: "/videos/register-orders.mp4",    videoTitle: "New Order" },
-      { label: "New Payment" },
+      { label: "New Payment",   hasPreview: true, videoSrc: "/videos/customer-payments.mp4",  videoTitle: "New Payment"},
       { label: "Partners" },
       { label: "Products",      hasPreview: true, videoSrc: "/videos/register-products.mp4",  videoTitle: "Products" },
       { label: "Price Checker", hasPreview: true, videoSrc: "/videos/price-checker.mp4",  videoTitle: "Price Checker" },
