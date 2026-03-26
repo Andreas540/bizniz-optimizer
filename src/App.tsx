@@ -6,11 +6,12 @@ import PreviewSection from "./components/PreviewSection";
 import ContactSection from "./components/ContactSection";
 import PricingSection from "./components/PricingSection";
 import QASection from "./components/QASection";
+import AppointmentSection from "./components/AppointmentSection";
 import TermsPage from "./pages/TermsPage";
 import "./App.css";
 
-type SectionId = "intro" | "previews" | "contact" | "pricing" | "qa";
-const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "qa"];
+type SectionId = "intro" | "previews" | "contact" | "pricing" | "qa" | "appointment";
+const SECTION_IDS: SectionId[] = ["intro", "previews", "contact", "pricing", "qa", "appointment"];
 
 function MainSite() {
   const links = useMemo(
@@ -20,6 +21,7 @@ function MainSite() {
       { id: "contact",  label: "Contact us!" },
       { id: "pricing",  label: "Pricing & Purchase" },
       { id: "qa",       label: "Q&A" },
+      { id: "appointment", label: "Book an Appointment" },
     ],
     []
   );
@@ -29,7 +31,7 @@ function MainSite() {
   const mainRef = useRef<HTMLElement | null>(null);
 
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
-    intro: null, previews: null, contact: null, pricing: null, qa: null,
+    intro: null, previews: null, contact: null, pricing: null, qa: null, appointment: null,
   });
 
   const applyTransforms = useCallback((idx: number) => {
@@ -139,6 +141,10 @@ function MainSite() {
 
           <section ref={setSectionRef("qa")} id="qa" className="section">
             <QASection />
+          </section>
+
+          <section ref={setSectionRef("appointment")} id="appointment" className="section">
+            <AppointmentSection />
           </section>
         </main>
       </div>
