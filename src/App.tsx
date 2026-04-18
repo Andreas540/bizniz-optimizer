@@ -30,6 +30,7 @@ function MainSite() {
   const currentIdxRef = useRef(0);
   const isSnapping = useRef(false);
   const mainRef = useRef<HTMLElement | null>(null);
+  const trackedSections = useRef(new Set<string>());
 
   const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
     intro: null, previews: null, contact: null, pricing: null, qa: null, appointment: null,
@@ -48,28 +49,19 @@ function MainSite() {
     isSnapping.current = true;
     currentIdxRef.current = clamped;
     applyTransforms(clamped);
+    const sectionId = SECTION_IDS[clamped];
+    if (!trackedSections.current.has(sectionId)) {
+      trackedSections.current.add(sectionId);
+      track(`section_${sectionId}`);
+    }
     setTimeout(() => { isSnapping.current = false; }, 450);
   }, [applyTransforms]);
 
-  useEffect(() => { applyTransforms(0); }, [applyTransforms]);
-
   useEffect(() => {
-    const observed = new Set<string>();
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const id = (entry.target as HTMLElement).id;
-        if (entry.isIntersecting && !observed.has(id)) {
-          observed.add(id);
-          track(`section_${id}`);
-        }
-      });
-    }, { threshold: 0.5 });
-    SECTION_IDS.forEach(id => {
-      const el = sectionRefs.current[id];
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
+    applyTransforms(0);
+    trackedSections.current.add(SECTION_IDS[0]);
+    track(`section_${SECTION_IDS[0]}`);
+  }, [applyTransforms]);
 
   // Wheel
   useEffect(() => {
