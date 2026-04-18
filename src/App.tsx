@@ -8,6 +8,7 @@ import PricingSection from "./components/PricingSection";
 import QASection from "./components/QASection";
 import AppointmentSection from "./components/AppointmentSection";
 import TermsPage from "./pages/TermsPage";
+import { track } from "./utils/track";
 import "./App.css";
 
 type SectionId = "intro" | "previews" | "contact" | "pricing" | "qa" | "appointment";
@@ -51,6 +52,24 @@ function MainSite() {
   }, [applyTransforms]);
 
   useEffect(() => { applyTransforms(0); }, [applyTransforms]);
+
+  useEffect(() => {
+    const observed = new Set<string>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const id = (entry.target as HTMLElement).id;
+        if (entry.isIntersecting && !observed.has(id)) {
+          observed.add(id);
+          track(`section_${id}`);
+        }
+      });
+    }, { threshold: 0.5 });
+    SECTION_IDS.forEach(id => {
+      const el = sectionRefs.current[id];
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   // Wheel
   useEffect(() => {

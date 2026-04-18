@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./PricingSection.css";
+import { track } from "../utils/track";
 import VideoModal from "./VideoModal";
 
 const PRICE = 9.99;
@@ -138,6 +139,7 @@ export default function PricingSection() {
 
   const handleCheckout = async () => {
     if (!termsAccepted) return;
+    track('cta_click');
     setIsLoading(true);
     setCheckoutError(null);
 
