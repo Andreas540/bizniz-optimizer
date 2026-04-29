@@ -31,24 +31,43 @@ const MODULES: Module[] = [
     required: true,
     features: [
       { label: "Dashboard" },
-      { label: "Customers",    hasPreview: true, videoSrc: "/videos/register-customers.mp4", videoTitle: "Customers" },
-      { label: "New Order",    hasPreview: true, videoSrc: "/videos/register-orders.mp4",    videoTitle: "New Order" },
-      { label: "New Payment",  hasPreview: true, videoSrc: "/videos/register-payments.mp4",  videoTitle: "New Payment" },
+      { label: "Customers",          hasPreview: true, videoSrc: "/videos/register-customers.mp4", videoTitle: "Customers" },
+      { label: "New Order",          hasPreview: true, videoSrc: "/videos/register-orders.mp4",    videoTitle: "New Order" },
+      { label: "New Payment",        hasPreview: true, videoSrc: "/videos/register-payments.mp4",  videoTitle: "New Payment" },
       { label: "Partners" },
-      { label: "Products",     hasPreview: true, videoSrc: "/videos/register-products.mp4",  videoTitle: "Products" },
+      { label: "Products & Services", hasPreview: true, videoSrc: "/videos/register-products.mp4", videoTitle: "Products" },
       { label: "Price Checker" },
       { label: "Create Invoice" },
       { label: "Costs" },
+      { label: "Customer order form (link)" },
+      { label: "Stripe payment links for orders" },
+    ],
+  },
+  {
+    id: "booking",
+    name: "Bookings",
+    tag: { text: "- New" },
+    features: [
+      { label: "Booking dashboard" },
+      { label: "New booking" },
+      { label: "All bookings" },
+      { label: "Clients" },
+      { label: "Booking payments" },
+      { label: "SMS reminders" },
+      { label: "SMS usage tracking" },
+      { label: "Public online booking page" },
+      { label: "Stripe payment at booking" },
+      { label: "SimplyBook.me integration" },
     ],
   },
   {
     id: "supply",
-    name: "Supply and Demand",
+    name: "Supply Chain",
     features: [
-      { label: "Supply & Demand" },
+      { label: "Supply & Demand overview" },
       { label: "Production" },
-      { label: "Warehouse" },
-      { label: "New Order, Supplier" },
+      { label: "Warehouse / Inventory" },
+      { label: "Supplier orders" },
       { label: "Suppliers" },
     ],
   },
@@ -56,17 +75,19 @@ const MODULES: Module[] = [
     id: "employee",
     name: "Employee Management",
     features: [
-      { label: "Employees" },
-      { label: "Time Approval" },
-      { label: "Time Entry" },
+      { label: "Employee profiles" },
+      { label: "Time approval" },
+      { label: "Time entry" },
     ],
   },
   {
     id: "reports",
-    name: "Reports",
-    tag: { text: "- Coming soon" },
-    comingSoon: true,
-    features: [{ label: "All Reports" }],
+    name: "Reports & Analytics",
+    features: [
+      { label: "Sales & profit reports" },
+      { label: "Customer analysis" },
+      { label: "Ask BizWiz AI — AI-powered business insights" },
+    ],
   },
   {
     id: "admin",
@@ -75,7 +96,16 @@ const MODULES: Module[] = [
     required: true,
     noUserEdit: true,
     freeModule: true,
-    features: [{ label: "User Admin" }, { label: "Settings" }],
+    features: [
+      { label: "Team & user management" },
+      { label: "Role-based access control" },
+      { label: "Invoicing & subscription" },
+      { label: "Data export" },
+      { label: "Booking configuration" },
+      { label: "Payment providers (Stripe)" },
+      { label: "Settings (language, currency, timezone)" },
+      { label: "Contact" },
+    ],
   },
 ];
 
@@ -88,6 +118,7 @@ function initState(): Record<string, ModuleState> {
   });
   return s;
 }
+
 
 type ModalVideo = { src: string; title: string };
 
