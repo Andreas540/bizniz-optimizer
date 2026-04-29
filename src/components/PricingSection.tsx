@@ -51,9 +51,6 @@ const MODULES: Module[] = [
       { label: "All Bookings" },
       { label: "Clients" },
       { label: "Payments" },
-      { label: "Reminders" },
-      { label: "SMS Usage" },
-      { label: "Integration" },
     ],
   },
   {
